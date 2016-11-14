@@ -5,7 +5,8 @@
   "main": "js/index.js",
 
   "scripts": {
-    "start": "supervisor server.js",
+    "start":"node server.js",
+    "startdev": "supervisor server.js",
     "test": "mocha",
     "mkdir": "mkdir -p build",
     "build": "npm run clean && npm run mkdir && npm run build:html  && npm run build:css  && npm run build:js ",
