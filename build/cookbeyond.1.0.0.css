@@ -33,6 +33,7 @@ body {
   font-family: 'Cabin', sans-serif;
   margin: 0;
   color: white;
+  text-shadow: 1px 2px black;
 }
 .navigation {
   background-color: #f0f8f3;
@@ -138,11 +139,21 @@ body {
   margin-right: auto;
 }
 .food-div .foodslot {
+  float: left;
+}
+.food-div .foodslot label {
+  margin-left: 10px;
+  color: black;
+  font-family: 'Bitter', serif;
+  text-align: center;
+}
+.food-div .foodimage {
   margin: 5px;
   float: left;
   border: solid 2px #79d2a4;
   border-radius: 4px;
   width: 130px;
   height: 120px;
+  float: none;
 }
 /*# sourceMappingURL=cookbeyond.1.0.0.css.map */
