@@ -160,13 +160,18 @@ body {
   float: none;
 }
 .dayform {
-  color: red;
+  color: black;
   margin-left: auto;
   margin-right: auto;
+  font-family: 'Bitter', serif;
   display: none;
   border: solid 2px #339966;
-  height: 600px;
+  height: 200px;
   width: 800px;
+}
+.dayform h1 {
+  text-align: center;
+  font-family: 'Bitter', serif;
 }
 .dayform select {
   margin-right: 80px;

@@ -1,60 +1,82 @@
 var weekArray = [
 
-    {
-        week: 'Monday',
-        position: 1,
-        breakfast:null,
-        lunch:null,
-        dinner:null
-    },
+  {
+      week: 'Monday',
+      position: 1,
+      breakfast: null,
+      breakfastData: null,
+      lunch: null,
+      lunchData: null,
+      dinner: null,
+      dinnerData: null,
 
-    {
-        week: 'Tuesday',
-        position: 2,
-        breakfast:null,
-        lunch:null,
-        dinner:null
-    },
+  },
 
-    {
-        week: 'Wednesday',
-        position: 3,
-        breakfast:null,
-        lunch:null,
-        dinner:null
-    },
+  {
+      week: 'Tuesday',
+      position: 2,
+      breakfast: null,
+      breakfastData: null,
+      lunch: null,
+      lunchData: null,
+      dinner: null,
+      dinnerData: null,
+  },
 
-    {
-        week: 'Thursday',
-        position: 4,
-        breakfast:null,
-        lunch:null,
-        dinner:null
-    },
+  {
+      week: 'Wednesday',
+      position: 3,
+      breakfast: null,
+      breakfastData: null,
+      lunch: null,
+      lunchData: null,
+      dinner: null,
+      dinnerData: null,
+  },
 
-    {
-        week: 'Friday',
-        position: 5,
-        breakfast:null,
-        lunch:null,
-        dinner:null
-    },
+  {
+      week: 'Thursday',
+      position: 4,
+      breakfast: null,
+      breakfastData: null,
+      lunch: null,
+      lunchData: null,
+      dinner: null,
+      dinnerData: null,
+  },
 
-    {
-        week: 'Saturday',
-        position: 6,
-        breakfast:null,
-        lunch:null,
-        dinner:null
-    },
+  {
+      week: 'Friday',
+      position: 5,
+      breakfast: null,
+      breakfastData: null,
+      lunch: null,
+      lunchData: null,
+      dinner: null,
+      dinnerData: null,
+  },
 
-    {
-        week: 'Sunday',
-        position: 7,
-        breakfast:null,
-        lunch:null,
-        dinner:null
-    }
+  {
+      week: 'Saturday',
+      position: 6,
+      breakfast: null,
+      breakfastData: null,
+      lunch: null,
+      lunchData: null,
+      dinner: null,
+      dinnerData: null,
+  },
+
+  {
+      week: 'Sunday',
+      position: 7,
+      breakfast: null,
+      breakfastData: null,
+      lunch: null,
+      lunchData: null,
+      dinner: null,
+      dinnerData: null,
+  }
 ];
 
 
@@ -195,6 +217,12 @@ $(document).ready(function() {
         console.log(weekArray[this.id]); // makes the dayObject
         $('.dayform h1').text(weekArray[this.id].week);
 
+        $('.breakfast').val(weekArray[this.id].breakfast);
+
+        $('.lunch').val(weekArray[this.id].lunch);
+
+        $('.dinner').val(weekArray[this.id].dinner);
+
         $('.dayform').hide();
         $('.dayform').show();
 
@@ -213,6 +241,10 @@ $(document).ready(function() {
       weekArray[currentDay].breakfast=breakfastDish;
       weekArray[currentDay].lunch=lunchDish;
       weekArray[currentDay].dinner=dinnerDish;
+
+
+
+
 
         console.log(weekArray[currentDay]);
         console.log(weekArray);
