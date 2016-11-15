@@ -1,94 +1,159 @@
+var weekArray = [
 
+    {
+        week: 'Monday',
+        position: 1
+    },
 
-var weekArray=[
-  {week: 'Monday',
-    position:1},
+    {
+        week: 'Tuesday',
+        position: 2
+    },
 
-   {week:'Tuesday',
-   position:2},
+    {
+        week: 'Wednesday',
+        position: 3
+    },
 
-    {week:'Wednesday',
-    position:3},
+    {
+        week: 'Thursday',
+        position: 4
+    },
 
-     {week:'Thursday',
-      position:4},
+    {
+        week: 'Friday',
+        position: 5
+    },
 
-      {week:'Friday',
-       position:5},
+    {
+        week: 'Saturday',
+        position: 6
+    },
 
-     {week:'Saturday',
-       position:6},
-
-     {week:'Sunday',
-       position:7}
+    {
+        week: 'Sunday',
+        position: 7
+    }
 ];
 
-var displayWeek= function(week){
+var rearrangedArray = [];
 
-  $('.weekdiv').append("<div class='weekslot'><p>"+week+"</p></div>");
+var displayWeek = function(week) {
+
+    $('.weekdiv').append("<div class='weekslot'><p>" + week + "</p></div>");
 
 };
 
 
-$(document).ready(function(){
 
-var i;
-var rearrangedArray= [];
+$(document).ready(function() {
 
-for(i=0; i<7; i++){
+    var i;
 
-displayWeek(weekArray[i].week);
-
-}
+    var index = 0;
 
 
 
-$('#arrow-right').click(function(){
-  console.log('clicked');
-  for(i=0; i<7; i++){
+    for (i = 0; i < 7; i++) {
 
 
-  if( weekArray[i].position==7){
+        displayWeek(weekArray[i].week);
 
-      weekArray[i].position = weekArray[i].position-6 ;
     }
-      else {
-        weekArray[i].position = weekArray[i].position+1;
-      }
- }
-
-  for (i=0; i<7; i++) {
-
-     
-
-
-  }
 
 
 
-});
+    $('#arrow-right').click(function() {
 
 
-$('#arrow-left').click(function(){
+        rearrangedArray = [];
+        for (i = 0; i < 7; i++) {
 
-  for(i=0; i<7; i++){
+            if (weekArray[i].position == 7) {
+                weekArray[i].position = weekArray[i].position - 6;
 
-  if( weekArray[i].position==1){
+            } else {
+                weekArray[i].position = weekArray[i].position + 1;
+            }
 
-      weekArray[i].position = weekArray[i].position+6 ;
-    }
-      else {
-        weekArray[i].position = weekArray[i].position-1;
-      }
+            if (i == 6) {
 
- }
+                for (index = 0; index < 8; index++) {
+                    for (i = 0; i < 7; i++) {
+
+                        if (weekArray[i].position == index) {
+
+                            rearrangedArray.push(weekArray[i]);
+
+                        }
+                    }
+
+                    if (index == 7) {
+                        $('.weekslot').remove();
+                        for (i = 0; i < 7; i++) {
+
+                            displayWeek(rearrangedArray[i].week);
+
+                        }
+                    }
+                }
+
+            }
 
 
+        } // end of for
 
 
-});
+    });
 
 
+    $('#arrow-left').click(function() {
+
+
+        rearrangedArray = [];
+
+        for (i = 0; i < 7; i++) {
+
+            if (weekArray[i].position == 1) {
+
+                weekArray[i].position = weekArray[i].position + 6;
+
+            } else {
+                weekArray[i].position = weekArray[i].position - 1;
+            }
+
+            if (i == 6) {
+
+                for (index = 0; index < 8; index++) {
+
+                    for (i = 0; i < 7; i++) {
+
+                        if (weekArray[i].position == index) {
+
+                            rearrangedArray.push(weekArray[i]);
+
+                            // $('.weekslot').remove();
+                            // displayWeek(rearrangedArray[i].week);
+                        }
+                    }
+
+                    if (index == 7) {
+                        $('.weekslot').remove();
+                        for (i = 0; i < 7; i++) {
+
+                            displayWeek(rearrangedArray[i].week);
+
+                        }
+                    }
+                }
+
+            }
+
+
+        } // end of for
+
+
+    });
 
 
 
