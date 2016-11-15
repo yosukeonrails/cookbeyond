@@ -6,6 +6,7 @@
 @font1: 'Rubik', sans-serif;
 @font2: 'Bitter', serif;
 
+li{list-style: none;}
 .weekslot {
     margin: 5px;
     float:left;
@@ -13,6 +14,7 @@
     border-radius: 4px;
     width: 130px;
     height: 120px;
+
 }
 .centralize {
     margin-left: auto;
@@ -179,8 +181,10 @@ body {
   .centralize;
 
 .foodslot{
+
   float:left;
   label{
+
     margin-left: 10px;
     color:black;
     font-family: @font2;
@@ -188,6 +192,8 @@ body {
 
   }
 }
+
+
 
  .foodimage{
 
@@ -198,4 +204,19 @@ body {
  }
 
 
+}
+
+
+.dayform {
+  color:red;
+  .centralize;
+
+   display: none;
+  border: solid 2px @green;
+  height: 600px;
+  width: 800px;
+  select{
+
+    margin-right: 80px;
+  }
 }
