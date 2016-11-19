@@ -25,22 +25,38 @@
 
     <div class="navigation">
 
-        <ul>
+      <ul>
 
-            <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
-            <li>about</li>
-            <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
-            <li>login</li>
-            <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
-            <li>Our Menu</li>
-            <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
-            <li>new!</li>
-            <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
-            <li>order now!</li>
-            <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
-            <li>contact</li>
+          <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+          <li>about</li>
+          <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
 
-        </ul>
+          <a href="signup.html">
+              <li>sign up</li>
+          </a>
+          <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+
+          <a href="/login.html">
+              <li>login</li>
+          </a>
+          <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+
+          <li>Our Menu</li>
+          <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+          <li>new!</li>
+
+          <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+          <a href="/order.html">
+
+              <li>order now!</li>
+          </a>
+
+
+          <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+          <li>contact</li>
+
+      </ul>
+
 
     </div>
 
@@ -69,18 +85,33 @@
 
           <div class="dayform">
                 <h1></h1>
-                <label for="">Breakfast</label>
-                  <select class="breakfast" name="">
 
-                  </select>
-
-                  <label for="">Lunch</label>
-                    <select class="lunch" name="">
+                <div class="breakfastdiv">
+                  <label for="">Breakfast</label>
+                    <select class="breakfast" name="">
+                      <option class="not-optional-breakfast" value="" disabled selected>select dish</option>
                     </select>
+                </div>
 
-                    <label for="dinner">Dinner</label>
-                      <select class="dinner" name="">
+
+                  <div class="lunchdiv">
+                    <label for="">Lunch</label>
+                      <select class="lunch" name="">
+                          <option class="not-optional-lunch" value="" disabled selected>select dish</option>
                       </select>
+                  </div>
+
+
+                <div class="dinnerdiv">
+                  <label for="dinner">Dinner</label>
+                    <select class="dinner" name="">
+                        <option class="not-optional-dinner" value="" disabled selected>select dish</option>
+                    </select>
+                </div>
+
+
+                  <button class="submit-button" type="button" name="button">submit</button>
+
           </div>
 
 

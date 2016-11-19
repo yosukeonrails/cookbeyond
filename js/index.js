@@ -1,110 +1,49 @@
-var weekArray = [
-
-  {
-      week: 'Monday',
-      position: 1,
-      breakfast: null,
-      breakfastData: null,
-      lunch: null,
-      lunchData: null,
-      dinner: null,
-      dinnerData: null,
-
-  },
-
-  {
-      week: 'Tuesday',
-      position: 2,
-      breakfast: null,
-      breakfastData: null,
-      lunch: null,
-      lunchData: null,
-      dinner: null,
-      dinnerData: null,
-  },
-
-  {
-      week: 'Wednesday',
-      position: 3,
-      breakfast: null,
-      breakfastData: null,
-      lunch: null,
-      lunchData: null,
-      dinner: null,
-      dinnerData: null,
-  },
-
-  {
-      week: 'Thursday',
-      position: 4,
-      breakfast: null,
-      breakfastData: null,
-      lunch: null,
-      lunchData: null,
-      dinner: null,
-      dinnerData: null,
-  },
-
-  {
-      week: 'Friday',
-      position: 5,
-      breakfast: null,
-      breakfastData: null,
-      lunch: null,
-      lunchData: null,
-      dinner: null,
-      dinnerData: null,
-  },
-
-  {
-      week: 'Saturday',
-      position: 6,
-      breakfast: null,
-      breakfastData: null,
-      lunch: null,
-      lunchData: null,
-      dinner: null,
-      dinnerData: null,
-  },
-
-  {
-      week: 'Sunday',
-      position: 7,
-      breakfast: null,
-      breakfastData: null,
-      lunch: null,
-      lunchData: null,
-      dinner: null,
-      dinnerData: null,
-  }
-];
-
-
-var dishesArray = [{
-    name: 'Japanese Curry',
-    imageURL: 'http://tastykitchen.com/recipes/wp-content/uploads/sites/2/2010/06/Japanese-Curry.jpg',
-}, {
-    name: 'Tomatoe Soup',
-    imageURL: 'https://measuringcupcuisine.files.wordpress.com/2012/08/123-edit.jpg',
-}, {
-    name: 'Spaguetti',
-    imageURL: 'http://www.mnftiu.cc/wp-content/uploads/2013/12/spaghetti-with-tomato-sauce.jpg',
-}, {
-    name: 'Burrito',
-    imageURL: 'http://foodnetwork.sndimg.com/content/dam/images/food/fullset/2015/8/26/2/WU0811H_Grilled-Veggie-Burritos_s4x3.jpg',
-}, {
-    name: 'Salmon',
-    imageURL: 'http://www.wonderwardrobes.com/wp-content/uploads/2015/07/salmon.jpg',
-}];
-
+var $ = require('jquery');
+var events = require('events');
+var myEmitter = new events.EventEmitter();
+import User from './users.js';
+import View from './view.js';
+var weekArray = require('./weekarray.js');
+var dishesArray = [];
 var rearrangedArray = [];
+var data;
+
+
+class Order {
+
+    postOrder(dishesArray) {
+
+        // handle post request
+
+
+
+        var ajax = $.ajax('/order', {
+              type:'POST',
+              data:JSON.stringify(dishesArray),
+              dataType:'json',
+              contentType: 'application/json',
+
+              success:function(data){
+                console.log(data.week);
+              },
+              error: function(error){
+                console.log(error);
+              }
+        });
+    }
+
+
+
+}
+
+
+//
 
 var displayWeek = function(i, week) {
 
     $('.weekdiv ul').append("<li id=" + i + "><div class='weekslot' ><p>" + week + "</p></div></li>");
 
 };
-
 
 function arrangeArray() {
 
@@ -144,23 +83,46 @@ function displayFood(dishes) {
 
 $(document).ready(function() {
 
+     var newOrder= new Order();
+
+
+    $.get('/dishes', (data) => { //  data is the json data responded //
+
+        console.log(data);
+        dishesArray = data;
+        optionView();
+
+    });
+
+
+    console.log('somgthing here');
+
+    var appView = new View();
+    var appUser = new User();
+
+    var dishId;
     var currentDay;
     var i;
-    for (i = 0; i < dishesArray.length; i++) {
-        console.log(dishesArray[i]);
-        displayFood(dishesArray[i]);
 
-        $('.breakfast').append("<option value=" + dishesArray[i].name + ">" + dishesArray[i].name + "</option>");
-        $('.lunch').append("<option value=" + dishesArray[i].name + ">" + dishesArray[i].name + "</option>");
-        $('.dinner').append("<option value=" + dishesArray[i].name + ">" + dishesArray[i].name + "</option>");
+
+    function optionView() {
+
+        for (i = 0; i < dishesArray.length; i++) {
+
+            displayFood(dishesArray[i]);
+
+            $('.breakfast').append("<option value=" + i + " id=" + i + ">" + dishesArray[i].name + "</option>");
+            $('.lunch').append("<option value=" + i + " id=" + i + ">" + dishesArray[i].name + "</option>");
+            $('.dinner').append("<option value=" + i + " id=" + i + ">" + dishesArray[i].name + "</option>");
+        }
+
+
     }
-
 
     for (i = 0; i < 7; i++) {
         displayWeek(i, weekArray[i].week);
 
     }
-
 
 
     $('#arrow-right').click(function() {
@@ -213,15 +175,25 @@ $(document).ready(function() {
 
     $('ul').on('click', 'li', function() {
 
-        console.log(this.id);
-        console.log(weekArray[this.id]); // makes the dayObject
+
         $('.dayform h1').text(weekArray[this.id].week);
 
+
+        //
+        console.log(weekArray[this.id].breakfast);
+        //
         $('.breakfast').val(weekArray[this.id].breakfast);
+
+        console.log(weekArray[this.id].lunch);
 
         $('.lunch').val(weekArray[this.id].lunch);
 
+        console.log(weekArray[this.id].dinner);
+
         $('.dinner').val(weekArray[this.id].dinner);
+
+
+
 
         $('.dayform').hide();
         $('.dayform').show();
@@ -230,19 +202,25 @@ $(document).ready(function() {
 
     });
 
-    $('.dayform select').click().change(function() {
 
 
-        var breakfastDish = $('.breakfast option:selected').val();
-        var lunchDish = $('.lunch option:selected').val();
-        var dinnerDish = $('.dinner option:selected').val();
+
+    $('.dayform select').click(function() {
+
+        console.log($('.breakfast option:selected').text());
+
+        var breakfastId = $('.breakfast option:selected').val();
+        var lunchId = $('.lunch option:selected').val();
+        var dinnerId = $('.dinner option:selected').val();
 
 
-      weekArray[currentDay].breakfast=breakfastDish;
-      weekArray[currentDay].lunch=lunchDish;
-      weekArray[currentDay].dinner=dinnerDish;
+        weekArray[currentDay].breakfastData = dishesArray[breakfastId];
+        weekArray[currentDay].lunchData = dishesArray[lunchId];
+        weekArray[currentDay].dinnerData = dishesArray[dinnerId];
 
-
+        weekArray[currentDay].breakfast = $('.breakfast option:selected').text();
+        weekArray[currentDay].lunch = $('.lunch option:selected').text();
+        weekArray[currentDay].dinner = $('.dinner option:selected').text();
 
 
 
@@ -251,6 +229,45 @@ $(document).ready(function() {
 
 
     });
+
+    //log in
+
+
+    $('#giva-login-button').click(function() {
+        event.preventDefault();
+        console.log('clicked');
+        appUser.logInUser();
+    });
+
+
+    $('#login-button').click(function() {
+        console.log('clicked');
+        window.location.href = "/home.html";
+
+
+    });
+
+
+    // sign up
+    //
+
+    //
+
+
+    $('.signup-form').submit(function() {
+        event.preventDefault();
+        appUser.validatePassword();
+    });
+
+
+
+    $('.submit-button').click(function() {
+
+        newOrder.postOrder(weekArray);
+        console.log(weekArray);
+
+    });
+
 
 
 

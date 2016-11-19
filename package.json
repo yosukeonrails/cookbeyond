@@ -3,18 +3,20 @@
   "version": "1.0.0",
   "description": "",
   "main": "js/index.js",
-
   "scripts": {
-    "start":"node server.js",
+    "start": "node server.js",
     "startdev": "supervisor server.js",
     "test": "mocha",
     "mkdir": "mkdir -p build",
-    "build": "npm run clean && npm run mkdir && npm run build:html  && npm run build:css  && npm run build:js ",
+    "build": "npm run clean && npm run mkdir && npm run build:html  && npm run build:css  && npm run build:js && npm run build:images",
     "watch": "npm run watch:html & npm run watch:js & npm run watch:css ",
     "clean": "rm -rf build",
     "build:html": "npm run clean:html && cp public/*.html build/ && cp -r ./node_modules/materialize-css/dist/fonts build/",
     "watch:html": "npm run build:html && chokidar public/*.html -c 'npm run build:html'",
     "clean:html": "rm -f build/index.html",
+    "build:images": "npm run clean:images && cp images/*.png build/",
+    "watch:images": "npm run build:images && chokidar images/*.png -c 'npm run build:images'",
+    "clean:images": "rm -f build/*.png",
     "build:js": "npm run build:js:unminified && npm run build:js:minified",
     "watch:js": "npm run watch:js:unminified & npm run watch:js:minified",
     "clean:js": "npm run clean:js:unminified && npm run clean:js:minified",
@@ -37,11 +39,16 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^0.8.7",
+    "bcryptjs": "^2.3.0",
     "body-parser": "^1.15.2",
+    "express": "^4.14.0",
     "jquery": "^3.1.1",
     "materialize-css": "^0.97.7",
     "mongodb": "^2.2.10",
-    "mongoose": "^4.6.3"
+    "mongoose": "^4.6.8",
+    "passport": "^0.3.2",
+    "passport-http": "^0.3.0"
   },
   "devDependencies": {
     "babel-core": "^6.14.0",

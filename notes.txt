@@ -1,0 +1,16 @@
+
+
+
+//.. Handle Bars ..//
+
+// .. Log in and tokens//
+
+
+// loading time for images and etc//
+//data base cost //
+
+
+
+
+ // endpoints//
+ ..CRUD..
