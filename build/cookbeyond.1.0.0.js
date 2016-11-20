@@ -48,11 +48,11 @@
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	var _users = __webpack_require__(3);
+	var _users = __webpack_require__(1);
 	
 	var _users2 = _interopRequireDefault(_users);
 	
-	var _view = __webpack_require__(4);
+	var _view = __webpack_require__(2);
 	
 	var _view2 = _interopRequireDefault(_view);
 	
@@ -60,8 +60,8 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var $ = __webpack_require__(1);
-	var events = __webpack_require__(2);
+	var $ = __webpack_require__(3);
+	var events = __webpack_require__(4);
 	var myEmitter = new events.EventEmitter();
 	
 	var weekArray = __webpack_require__(5);
@@ -138,7 +138,7 @@
 	
 	function displayFood(dishes) {
 	
-	    $('.food-div').append("<div class='foodslot'><div class='foodimage' style='background-image:url(" + dishes.imageURL + "); background-size: 130px 120px'> </div> <label>" + dishes.name + "</label></div> ");
+	    $('.food-div').append("<div class='foodslot' id=" + dishes.dishId + "><div class='foodimage'  style='background-image:url(" + dishes.imageURL + "); background-size: 130px 120px'> </div> <label>" + dishes.name + "</label></div> ");
 	}
 	
 	$(document).ready(function () {
@@ -240,6 +240,17 @@
 	        currentDay = this.id;
 	    });
 	
+	    $('.food-div').on('click', '.foodslot', function () {
+	
+	        var selectedDish = $(this)[0].id;
+	
+	        for (i = 0; i < dishesArray.length; i++) {
+	            if (selectedDish == dishesArray[i].dishId) {
+	                console.log(dishesArray[i]);
+	            } else {}
+	        }
+	    });
+	
 	    $('.dayform select').click(function () {
 	
 	        console.log($('.breakfast option:selected').text());
@@ -294,6 +305,207 @@
 
 /***/ },
 /* 1 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var User = function () {
+	    function User() {
+	        _classCallCheck(this, User);
+	    }
+	
+	    _createClass(User, [{
+	        key: 'validatePassword',
+	        value: function validatePassword() {
+	
+	            var user = {
+	                username: $('#email-input').val(),
+	                password: $('#password-input').val(),
+	                password2: $('#confirm-password-input').val()
+	            };
+	
+	            if (user.password !== user.password2) {
+	
+	                alert('password did not match!');
+	            }
+	
+	            this.createUser();
+	        }
+	    }, {
+	        key: 'getUser',
+	        value: function getUser() {}
+	    }, {
+	        key: 'logInUser',
+	        value: function logInUser() {
+	
+	            var user = {
+	                username: $('#login-email-input').val(),
+	                password: $('#login-password-input').val()
+	            };
+	            var ajax = $.ajax('/login', {
+	
+	                type: 'POST',
+	                data: JSON.stringify(user),
+	                dataType: 'json',
+	                contentType: 'application/json',
+	
+	                success: function success() {
+	                    console.log('user logged in!');
+	                },
+	                error: function error(_error) {
+	
+	                    console.log(_error);
+	                }
+	
+	            });
+	        }
+	    }, {
+	        key: 'createUser',
+	        value: function createUser() {
+	
+	            var user = {
+	                username: $('#email-input').val(),
+	                password: $('#password-input').val()
+	
+	            };
+	
+	            var ajax = $.ajax('/users', {
+	
+	                type: 'POST',
+	                data: JSON.stringify(user),
+	                dataType: 'json',
+	                contentType: 'application/json',
+	
+	                success: function success() {
+	                    console.log('user created!');
+	                },
+	                error: function error(_error2) {
+	
+	                    console.log(_error2);
+	                }
+	
+	            });
+	        }
+	    }, {
+	        key: 'updateUser',
+	        value: function updateUser() {
+	
+	            var user = {
+	                username: $('#email-input').val(),
+	                password: $('#password-input').val()
+	            };
+	        }
+	    }]);
+	
+	    return User;
+	}();
+	
+	exports.default = User;
+
+/***/ },
+/* 2 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var View = function () {
+	    function View() {
+	        _classCallCheck(this, View);
+	    }
+	
+	    _createClass(View, [{
+	        key: 'showErrorMessage',
+	        value: function showErrorMessage(message) {}
+	    }, {
+	        key: 'showUser',
+	        value: function showUser() {
+	
+	            window.location.href = "/facebookhome.html";
+	
+	            $('#profile-pic').append('<img src=' + this.user.pictureUrl + ' alt="" />');
+	
+	            $('.show-user').text(this.user.name);
+	        }
+	    }, {
+	        key: 'showBirthday',
+	        value: function showBirthday() {}
+	    }, {
+	        key: 'updateQuestion',
+	        value: function updateQuestion() {
+	
+	            var questions = data.questions_array;
+	
+	            console.log(questions.choices);
+	
+	            $.each(questions, function (index, value) {
+	
+	                console.log(value.question);
+	
+	                var option;
+	
+	                for (var i = 0; i < value.choices.length; i++) {
+	
+	                    console.log(value.choices[i]);
+	                    console.log(value.choices.length);
+	
+	                    $('.quiz-window').append('<option value="1">' + value.choices[i] + '</option>');
+	
+	                    option = value.choices[i];
+	                    console.log('options are' + option);
+	                }
+	
+	                $('.quiz-window').append('<select><label>' + value.question + '</label>' + options + '</select>');
+	            });
+	
+	            $.each(data.questions_array.choices, function () {
+	                console.log(value);
+	            });
+	        }
+	    }, {
+	        key: 'login',
+	        value: function login() {
+	
+	            var email = $('#email-input').val();
+	            var password = $('#password-input').val();
+	            var userData = data.users;
+	
+	            if (!userData[email] || password != data.users[email].password) {
+	
+	                alert('wrong passoword or user mate!');
+	                return;
+	            }
+	
+	            this.user = new User(data.users[email].name, data.users[email].email, data.users[email].pictureUrl, data.users[email].friendList);
+	
+	            $('.sign-in').fadeOut(500, function () {});
+	
+	            this.showUser();
+	        }
+	    }]);
+	
+	    return View;
+	}();
+	
+	exports.default = View;
+
+/***/ },
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -10519,7 +10731,7 @@
 
 
 /***/ },
-/* 2 */
+/* 4 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -10825,207 +11037,6 @@
 	  return arg === void 0;
 	}
 
-
-/***/ },
-/* 3 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var User = function () {
-	    function User() {
-	        _classCallCheck(this, User);
-	    }
-	
-	    _createClass(User, [{
-	        key: 'validatePassword',
-	        value: function validatePassword() {
-	
-	            var user = {
-	                username: $('#email-input').val(),
-	                password: $('#password-input').val(),
-	                password2: $('#confirm-password-input').val()
-	            };
-	
-	            if (user.password !== user.password2) {
-	
-	                alert('password did not match!');
-	            }
-	
-	            this.createUser();
-	        }
-	    }, {
-	        key: 'getUser',
-	        value: function getUser() {}
-	    }, {
-	        key: 'logInUser',
-	        value: function logInUser() {
-	
-	            var user = {
-	                username: $('#login-email-input').val(),
-	                password: $('#login-password-input').val()
-	            };
-	            var ajax = $.ajax('/login', {
-	
-	                type: 'POST',
-	                data: JSON.stringify(user),
-	                dataType: 'json',
-	                contentType: 'application/json',
-	
-	                success: function success() {
-	                    console.log('user logged in!');
-	                },
-	                error: function error(_error) {
-	
-	                    console.log(_error);
-	                }
-	
-	            });
-	        }
-	    }, {
-	        key: 'createUser',
-	        value: function createUser() {
-	
-	            var user = {
-	                username: $('#email-input').val(),
-	                password: $('#password-input').val()
-	
-	            };
-	
-	            var ajax = $.ajax('/users', {
-	
-	                type: 'POST',
-	                data: JSON.stringify(user),
-	                dataType: 'json',
-	                contentType: 'application/json',
-	
-	                success: function success() {
-	                    console.log('user created!');
-	                },
-	                error: function error(_error2) {
-	
-	                    console.log(_error2);
-	                }
-	
-	            });
-	        }
-	    }, {
-	        key: 'updateUser',
-	        value: function updateUser() {
-	
-	            var user = {
-	                username: $('#email-input').val(),
-	                password: $('#password-input').val()
-	            };
-	        }
-	    }]);
-	
-	    return User;
-	}();
-	
-	exports.default = User;
-
-/***/ },
-/* 4 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var View = function () {
-	    function View() {
-	        _classCallCheck(this, View);
-	    }
-	
-	    _createClass(View, [{
-	        key: 'showErrorMessage',
-	        value: function showErrorMessage(message) {}
-	    }, {
-	        key: 'showUser',
-	        value: function showUser() {
-	
-	            window.location.href = "/facebookhome.html";
-	
-	            $('#profile-pic').append('<img src=' + this.user.pictureUrl + ' alt="" />');
-	
-	            $('.show-user').text(this.user.name);
-	        }
-	    }, {
-	        key: 'showBirthday',
-	        value: function showBirthday() {}
-	    }, {
-	        key: 'updateQuestion',
-	        value: function updateQuestion() {
-	
-	            var questions = data.questions_array;
-	
-	            console.log(questions.choices);
-	
-	            $.each(questions, function (index, value) {
-	
-	                console.log(value.question);
-	
-	                var option;
-	
-	                for (var i = 0; i < value.choices.length; i++) {
-	
-	                    console.log(value.choices[i]);
-	                    console.log(value.choices.length);
-	
-	                    $('.quiz-window').append('<option value="1">' + value.choices[i] + '</option>');
-	
-	                    option = value.choices[i];
-	                    console.log('options are' + option);
-	                }
-	
-	                $('.quiz-window').append('<select><label>' + value.question + '</label>' + options + '</select>');
-	            });
-	
-	            $.each(data.questions_array.choices, function () {
-	                console.log(value);
-	            });
-	        }
-	    }, {
-	        key: 'login',
-	        value: function login() {
-	
-	            var email = $('#email-input').val();
-	            var password = $('#password-input').val();
-	            var userData = data.users;
-	
-	            if (!userData[email] || password != data.users[email].password) {
-	
-	                alert('wrong passoword or user mate!');
-	                return;
-	            }
-	
-	            this.user = new User(data.users[email].name, data.users[email].email, data.users[email].pictureUrl, data.users[email].friendList);
-	
-	            $('.sign-in').fadeOut(500, function () {});
-	
-	            this.showUser();
-	        }
-	    }]);
-	
-	    return View;
-	}();
-	
-	exports.default = View;
 
 /***/ },
 /* 5 */

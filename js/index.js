@@ -74,7 +74,7 @@ function arrangeArray() {
 
 function displayFood(dishes) {
 
-    $('.food-div').append("<div class='foodslot'><div class='foodimage' style='background-image:url(" + dishes.imageURL + "); background-size: 130px 120px'> </div> <label>" + dishes.name + "</label></div> ");
+    $('.food-div').append("<div class='foodslot' id="+dishes.dishId+"><div class='foodimage'  style='background-image:url(" + dishes.imageURL + "); background-size: 130px 120px'> </div> <label>" + dishes.name + "</label></div> ");
 
 }
 
@@ -203,6 +203,22 @@ $(document).ready(function() {
     });
 
 
+    $('.food-div').on('click', '.foodslot', function(){
+
+
+      var selectedDish= $(this)[0].id;
+
+            for(i=0; i<dishesArray.length; i++){
+                 if(selectedDish==dishesArray[i].dishId){
+                   console.log(dishesArray[i]);
+
+                 }else {
+
+                 }
+               }
+
+
+    });
 
 
     $('.dayform select').click(function() {
