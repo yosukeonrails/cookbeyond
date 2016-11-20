@@ -7,6 +7,7 @@ var weekArray = require('./weekarray.js');
 var dishesArray = [];
 var rearrangedArray = [];
 var data;
+var selectedArray=[];
 
 
 class Order {
@@ -18,17 +19,17 @@ class Order {
 
 
         var ajax = $.ajax('/order', {
-              type:'POST',
-              data:JSON.stringify(dishesArray),
-              dataType:'json',
-              contentType: 'application/json',
+            type: 'POST',
+            data: JSON.stringify(dishesArray),
+            dataType: 'json',
+            contentType: 'application/json',
 
-              success:function(data){
+            success: function(data) {
                 console.log(data.week);
-              },
-              error: function(error){
+            },
+            error: function(error) {
                 console.log(error);
-              }
+            }
         });
     }
 
@@ -38,6 +39,48 @@ class Order {
 
 
 //
+//
+//
+
+
+
+class View{
+
+
+  clickDish(i,selectedDish) {
+      for (i = 0; i < dishesArray.length; i++) {
+          if (selectedDish == dishesArray[i].dishId) {
+            console.log(weekArray);
+              return dishesArray[i];
+
+          }
+      }
+  }
+
+  addDish(currentDay,dish){
+
+   selectedArray= weekArray[currentDay].orderArray;
+
+      selectedArray.push(dish);
+      // console.log(selectedArray);
+
+      this.displayDishList(selectedArray);
+  }
+
+  displayDishList(selectedArray){
+
+   var i=0;
+     $('.dayform li').remove();
+    for(i=0; i<selectedArray.length; i++){
+
+        $('.dayform ul').append('<li >'+selectedArray[i].name+'<p id='+i+'> delete </p></li>');
+          $('.dayform ul').append();
+        console.log(i);
+    }
+
+  }
+
+}
 
 var displayWeek = function(i, week) {
 
@@ -74,7 +117,7 @@ function arrangeArray() {
 
 function displayFood(dishes) {
 
-    $('.food-div').append("<div class='foodslot' id="+dishes.dishId+"><div class='foodimage'  style='background-image:url(" + dishes.imageURL + "); background-size: 130px 120px'> </div> <label>" + dishes.name + "</label></div> ");
+    $('.food-div').append("<div class='foodslot' id=" + dishes.dishId + "><div class='foodimage'  style='background-image:url(" + dishes.imageURL + "); background-size: 130px 120px'> </div> <label>" + dishes.name + "</label></div> ");
 
 }
 
@@ -83,8 +126,8 @@ function displayFood(dishes) {
 
 $(document).ready(function() {
 
-     var newOrder= new Order();
-
+    var newOrder = new Order();
+    var newView= new View();
 
     $.get('/dishes', (data) => { //  data is the json data responded //
 
@@ -111,9 +154,7 @@ $(document).ready(function() {
 
             displayFood(dishesArray[i]);
 
-            $('.breakfast').append("<option value=" + i + " id=" + i + ">" + dishesArray[i].name + "</option>");
-            $('.lunch').append("<option value=" + i + " id=" + i + ">" + dishesArray[i].name + "</option>");
-            $('.dinner').append("<option value=" + i + " id=" + i + ">" + dishesArray[i].name + "</option>");
+
         }
 
 
@@ -173,78 +214,53 @@ $(document).ready(function() {
 
     });
 
-    $('ul').on('click', 'li', function() {
+    $('.weekdiv ul').on('click', 'li', function() {
 
 
         $('.dayform h1').text(weekArray[this.id].week);
+          console.log(weekArray[this.id].orderArray);
 
-
-        //
-        console.log(weekArray[this.id].breakfast);
-        //
-        $('.breakfast').val(weekArray[this.id].breakfast);
-
-        console.log(weekArray[this.id].lunch);
-
-        $('.lunch').val(weekArray[this.id].lunch);
-
-        console.log(weekArray[this.id].dinner);
-
-        $('.dinner').val(weekArray[this.id].dinner);
-
-
-
+        // console.log(weekArray[this.id].orderArray);
+        newView.displayDishList(weekArray[this.id].orderArray);
 
         $('.dayform').hide();
+
         $('.dayform').show();
 
-        currentDay = this.id;
-
-    });
-
-
-    $('.food-div').on('click', '.foodslot', function(){
-
-
-      var selectedDish= $(this)[0].id;
-
-            for(i=0; i<dishesArray.length; i++){
-                 if(selectedDish==dishesArray[i].dishId){
-                   console.log(dishesArray[i]);
-
-                 }else {
-
-                 }
-               }
+        currentDay=this.id;
 
 
     });
 
 
-    $('.dayform select').click(function() {
-
-        console.log($('.breakfast option:selected').text());
-
-        var breakfastId = $('.breakfast option:selected').val();
-        var lunchId = $('.lunch option:selected').val();
-        var dinnerId = $('.dinner option:selected').val();
 
 
-        weekArray[currentDay].breakfastData = dishesArray[breakfastId];
-        weekArray[currentDay].lunchData = dishesArray[lunchId];
-        weekArray[currentDay].dinnerData = dishesArray[dinnerId];
+    $('.food-div').on('click', '.foodslot', function() {
 
-        weekArray[currentDay].breakfast = $('.breakfast option:selected').text();
-        weekArray[currentDay].lunch = $('.lunch option:selected').text();
-        weekArray[currentDay].dinner = $('.dinner option:selected').text();
+          var i=0;
+          var selectedDish = $(this)[0].id;
 
+        var dish=  newView.clickDish(i, selectedDish);
+          newView.addDish(currentDay, dish);
+    });
 
+    // DELETING DISH //
 
-        console.log(weekArray[currentDay]);
-        console.log(weekArray);
+    $('.dayform ul').on('click', 'p', function(){
 
+          console.log($(this));
+          console.log(weekArray[currentDay].orderArray[$(this)[0].id]);
+          var deletingArray= weekArray[currentDay].orderArray;
+
+          deletingArray.splice($(this)[0].id, 1);
+            console.log(deletingArray);
+
+          newView.displayDishList(weekArray[currentDay].orderArray);
 
     });
+
+
+
 
     //log in
 

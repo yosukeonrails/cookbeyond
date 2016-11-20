@@ -3,81 +3,46 @@ var weekArray = [
     {
         week: 'Monday',
         position: 1,
-        breakfast: null,
-        breakfastData: null,
-        lunch: null,
-        lunchData: null,
-        dinner: null,
-        dinnerData: null,
+        orderArray: []
 
     },
 
     {
         week: 'Tuesday',
         position: 2,
-        breakfast: null,
-        breakfastData: null,
-        lunch: null,
-        lunchData: null,
-        dinner: null,
-        dinnerData: null,
+        orderArray: []
     },
 
     {
         week: 'Wednesday',
         position: 3,
-        breakfast: null,
-        breakfastData: null,
-        lunch: null,
-        lunchData: null,
-        dinner: null,
-        dinnerData: null,
+        orderArray: []
     },
 
     {
         week: 'Thursday',
         position: 4,
-        breakfast: null,
-        breakfastData: null,
-        lunch: null,
-        lunchData: null,
-        dinner: null,
-        dinnerData: null,
+        orderArray: []
     },
 
     {
         week: 'Friday',
         position: 5,
-        breakfast: null,
-        breakfastData: null,
-        lunch: null,
-        lunchData: null,
-        dinner: null,
-        dinnerData: null,
+        orderArray: []
     },
 
     {
         week: 'Saturday',
         position: 6,
-        breakfast: null,
-        breakfastData: null,
-        lunch: null,
-        lunchData: null,
-        dinner: null,
-        dinnerData: null,
+        orderArray: []
     },
 
     {
         week: 'Sunday',
         position: 7,
-        breakfast: null,
-        breakfastData: null,
-        lunch: null,
-        lunchData: null,
-        dinner: null,
-        dinnerData: null,
+        orderArray: []
     }
 ];
 
 
-module.exports= weekArray;
+module.exports = weekArray;

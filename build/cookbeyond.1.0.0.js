@@ -68,6 +68,7 @@
 	var dishesArray = [];
 	var rearrangedArray = [];
 	var data;
+	var selectedArray = [];
 	
 	var Order = function () {
 	    function Order() {
@@ -101,6 +102,53 @@
 	}();
 	
 	//
+	//
+	//
+	
+	
+	var Selector = function () {
+	    function Selector() {
+	        _classCallCheck(this, Selector);
+	    }
+	
+	    _createClass(Selector, [{
+	        key: 'clickDish',
+	        value: function clickDish(i, selectedDish) {
+	            for (i = 0; i < dishesArray.length; i++) {
+	                if (selectedDish == dishesArray[i].dishId) {
+	                    console.log(weekArray);
+	                    return dishesArray[i];
+	                }
+	            }
+	        }
+	    }, {
+	        key: 'addDish',
+	        value: function addDish(currentDay, dish) {
+	
+	            selectedArray = weekArray[currentDay].orderArray;
+	
+	            selectedArray.push(dish);
+	            // console.log(selectedArray);
+	
+	            this.displayDishList(selectedArray);
+	        }
+	    }, {
+	        key: 'displayDishList',
+	        value: function displayDishList(selectedArray) {
+	
+	            var i = 0;
+	            $('.dayform li').remove();
+	            for (i = 0; i < selectedArray.length; i++) {
+	
+	                $('.dayform ul').append('<li >' + selectedArray[i].name + '<p id=' + i + '> delete </p></li>');
+	                $('.dayform ul').append();
+	                console.log(i);
+	            }
+	        }
+	    }]);
+	
+	    return Selector;
+	}();
 	
 	var displayWeek = function displayWeek(i, week) {
 	
@@ -144,6 +192,7 @@
 	$(document).ready(function () {
 	
 	    var newOrder = new Order();
+	    var newSelector = new Selector();
 	
 	    $.get('/dishes', function (data) {
 	        //  data is the json data responded //
@@ -167,10 +216,6 @@
 	        for (i = 0; i < dishesArray.length; i++) {
 	
 	            displayFood(dishesArray[i]);
-	
-	            $('.breakfast').append("<option value=" + i + " id=" + i + ">" + dishesArray[i].name + "</option>");
-	            $('.lunch').append("<option value=" + i + " id=" + i + ">" + dishesArray[i].name + "</option>");
-	            $('.dinner').append("<option value=" + i + " id=" + i + ">" + dishesArray[i].name + "</option>");
 	        }
 	    }
 	
@@ -217,24 +262,16 @@
 	        } // end of for
 	    });
 	
-	    $('ul').on('click', 'li', function () {
+	    $('.weekdiv ul').on('click', 'li', function () {
 	
 	        $('.dayform h1').text(weekArray[this.id].week);
+	        console.log(weekArray[this.id].orderArray);
 	
-	        //
-	        console.log(weekArray[this.id].breakfast);
-	        //
-	        $('.breakfast').val(weekArray[this.id].breakfast);
-	
-	        console.log(weekArray[this.id].lunch);
-	
-	        $('.lunch').val(weekArray[this.id].lunch);
-	
-	        console.log(weekArray[this.id].dinner);
-	
-	        $('.dinner').val(weekArray[this.id].dinner);
+	        // console.log(weekArray[this.id].orderArray);
+	        newSelector.displayDishList(weekArray[this.id].orderArray);
 	
 	        $('.dayform').hide();
+	
 	        $('.dayform').show();
 	
 	        currentDay = this.id;
@@ -242,33 +279,23 @@
 	
 	    $('.food-div').on('click', '.foodslot', function () {
 	
+	        var i = 0;
 	        var selectedDish = $(this)[0].id;
 	
-	        for (i = 0; i < dishesArray.length; i++) {
-	            if (selectedDish == dishesArray[i].dishId) {
-	                console.log(dishesArray[i]);
-	            } else {}
-	        }
+	        var dish = newSelector.clickDish(i, selectedDish);
+	        newSelector.addDish(currentDay, dish);
 	    });
 	
-	    $('.dayform select').click(function () {
+	    $('.dayform ul').on('click', 'p', function () {
 	
-	        console.log($('.breakfast option:selected').text());
+	        console.log($(this));
+	        console.log(weekArray[currentDay].orderArray[$(this)[0].id]);
+	        var deletingArray = weekArray[currentDay].orderArray;
 	
-	        var breakfastId = $('.breakfast option:selected').val();
-	        var lunchId = $('.lunch option:selected').val();
-	        var dinnerId = $('.dinner option:selected').val();
+	        deletingArray.splice($(this)[0].id, 1);
+	        console.log(deletingArray);
 	
-	        weekArray[currentDay].breakfastData = dishesArray[breakfastId];
-	        weekArray[currentDay].lunchData = dishesArray[lunchId];
-	        weekArray[currentDay].dinnerData = dishesArray[dinnerId];
-	
-	        weekArray[currentDay].breakfast = $('.breakfast option:selected').text();
-	        weekArray[currentDay].lunch = $('.lunch option:selected').text();
-	        weekArray[currentDay].dinner = $('.dinner option:selected').text();
-	
-	        console.log(weekArray[currentDay]);
-	        console.log(weekArray);
+	        newSelector.displayDishList(weekArray[currentDay].orderArray);
 	    });
 	
 	    //log in
@@ -11047,67 +11074,32 @@
 	var weekArray = [{
 	    week: 'Monday',
 	    position: 1,
-	    breakfast: null,
-	    breakfastData: null,
-	    lunch: null,
-	    lunchData: null,
-	    dinner: null,
-	    dinnerData: null
+	    orderArray: []
 	
 	}, {
 	    week: 'Tuesday',
 	    position: 2,
-	    breakfast: null,
-	    breakfastData: null,
-	    lunch: null,
-	    lunchData: null,
-	    dinner: null,
-	    dinnerData: null
+	    orderArray: []
 	}, {
 	    week: 'Wednesday',
 	    position: 3,
-	    breakfast: null,
-	    breakfastData: null,
-	    lunch: null,
-	    lunchData: null,
-	    dinner: null,
-	    dinnerData: null
+	    orderArray: []
 	}, {
 	    week: 'Thursday',
 	    position: 4,
-	    breakfast: null,
-	    breakfastData: null,
-	    lunch: null,
-	    lunchData: null,
-	    dinner: null,
-	    dinnerData: null
+	    orderArray: []
 	}, {
 	    week: 'Friday',
 	    position: 5,
-	    breakfast: null,
-	    breakfastData: null,
-	    lunch: null,
-	    lunchData: null,
-	    dinner: null,
-	    dinnerData: null
+	    orderArray: []
 	}, {
 	    week: 'Saturday',
 	    position: 6,
-	    breakfast: null,
-	    breakfastData: null,
-	    lunch: null,
-	    lunchData: null,
-	    dinner: null,
-	    dinnerData: null
+	    orderArray: []
 	}, {
 	    week: 'Sunday',
 	    position: 7,
-	    breakfast: null,
-	    breakfastData: null,
-	    lunch: null,
-	    lunchData: null,
-	    dinner: null,
-	    dinnerData: null
+	    orderArray: []
 	}];
 	
 	module.exports = weekArray;
