@@ -11,9 +11,7 @@ export default class User {
         };
 
         if (user.password !== user.password2) {
-
             alert('password did not match!');
-
         }
 
         this.createUser();
@@ -30,6 +28,7 @@ export default class User {
             username: $('#login-email-input').val(),
             password: $('#login-password-input').val(),
         };
+
         var ajax = $.ajax('/login', {
 
             type: 'POST',
@@ -38,12 +37,10 @@ export default class User {
             contentType: 'application/json',
 
             success: function() {
-                console.log('user logged in!');
+              console.log('YOURE LOGGED IN!');
             },
             error: function(error) {
-
-                console.log(error);
-
+                  console.log('NOPE');
             }
 
         });
@@ -68,7 +65,9 @@ export default class User {
             contentType: 'application/json',
 
             success: function() {
+
                 console.log('user created!');
+
             },
             error: function(error) {
 

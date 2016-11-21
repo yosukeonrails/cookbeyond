@@ -52,23 +52,22 @@
 	
 	var _users2 = _interopRequireDefault(_users);
 	
-	var _view = __webpack_require__(2);
-	
-	var _view2 = _interopRequireDefault(_view);
-	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var $ = __webpack_require__(3);
-	var events = __webpack_require__(4);
+	var $ = __webpack_require__(2);
+	var events = __webpack_require__(3);
 	var myEmitter = new events.EventEmitter();
 	
-	var weekArray = __webpack_require__(5);
+	var weekArray = __webpack_require__(4);
 	var dishesArray = [];
 	var rearrangedArray = [];
-	var data;
 	var selectedArray = [];
+	var data;
+	var currentObjectId = null;
+	var i = 0;
+	var repeatedArray = [];
 	
 	var Order = function () {
 	    function Order() {
@@ -79,9 +78,6 @@
 	        key: 'postOrder',
 	        value: function postOrder(dishesArray) {
 	
-	            // handle post request
-	
-	
 	            var ajax = $.ajax('/order', {
 	                type: 'POST',
 	                data: JSON.stringify(dishesArray),
@@ -89,10 +85,46 @@
 	                contentType: 'application/json',
 	
 	                success: function success(data) {
-	                    console.log(data.week);
+	
+	                    currentObjectId = data._id;
 	                },
 	                error: function error(_error) {
 	                    console.log(_error);
+	                }
+	            });
+	        }
+	
+	        // updateDish(){
+	        //
+	        //
+	        //
+	        //   this.updateOrder(weekArray, id);
+	        // }
+	
+	
+	    }, {
+	        key: 'updateOrder',
+	        value: function updateOrder(weekArray, id) {
+	
+	            //take id to find the id in post ,
+	            // update it by posting back the weekArray
+	            var updatingOrder = {
+	                week: weekArray,
+	                _id: id
+	            };
+	
+	            var ajax = $.ajax('/order', {
+	                type: 'PUT',
+	                data: JSON.stringify(updatingOrder),
+	                dataType: 'json',
+	                contentType: 'application/json',
+	
+	                success: function success(data) {
+	
+	                    console.log('UPDATED');
+	                },
+	                error: function error(_error2) {
+	                    console.log(_error2);
 	                }
 	            });
 	        }
@@ -106,17 +138,18 @@
 	//
 	
 	
-	var Selector = function () {
-	    function Selector() {
-	        _classCallCheck(this, Selector);
+	var View = function () {
+	    function View() {
+	        _classCallCheck(this, View);
 	    }
 	
-	    _createClass(Selector, [{
+	    _createClass(View, [{
 	        key: 'clickDish',
 	        value: function clickDish(i, selectedDish) {
 	            for (i = 0; i < dishesArray.length; i++) {
+	
 	                if (selectedDish == dishesArray[i].dishId) {
-	                    console.log(weekArray);
+	
 	                    return dishesArray[i];
 	                }
 	            }
@@ -125,12 +158,24 @@
 	        key: 'addDish',
 	        value: function addDish(currentDay, dish) {
 	
+	            console.log(selectedArray);
+	
+	            console.log(weekArray);
+	
 	            selectedArray = weekArray[currentDay].orderArray;
 	
 	            selectedArray.push(dish);
-	            // console.log(selectedArray);
 	
 	            this.displayDishList(selectedArray);
+	        }
+	    }, {
+	        key: 'addRepeatedDish',
+	        value: function addRepeatedDish(currentDay, dish, i) {
+	
+	            // selectedArray= weekArray[currentDay].orderArray[i].count;
+	            //
+	            //    selectedArray.orderArray[i].count.push(dish);
+	
 	        }
 	    }, {
 	        key: 'displayDishList',
@@ -140,14 +185,13 @@
 	            $('.dayform li').remove();
 	            for (i = 0; i < selectedArray.length; i++) {
 	
-	                $('.dayform ul').append('<li >' + selectedArray[i].name + '<p id=' + i + '> delete </p></li>');
+	                $('.dayform ul').append('<li >' + selectedArray[i].name + '<input type="number" id=' + i + '  min="0" name="name" value=""></input>' + '<p id=' + i + '> delete </p></li>');
 	                $('.dayform ul').append();
-	                console.log(i);
 	            }
 	        }
 	    }]);
 	
-	    return Selector;
+	    return View;
 	}();
 	
 	var displayWeek = function displayWeek(i, week) {
@@ -176,7 +220,6 @@
 	            $('.weekslot').remove();
 	            weekArray = [];
 	            for (i = 0; i < 7; i++) {
-	
 	                weekArray.push(rearrangedArray[i]);
 	                displayWeek(i, rearrangedArray[i].week);
 	            }
@@ -192,7 +235,7 @@
 	$(document).ready(function () {
 	
 	    var newOrder = new Order();
-	    var newSelector = new Selector();
+	    var newView = new View();
 	
 	    $.get('/dishes', function (data) {
 	        //  data is the json data responded //
@@ -204,7 +247,6 @@
 	
 	    console.log('somgthing here');
 	
-	    var appView = new _view2.default();
 	    var appUser = new _users2.default();
 	
 	    var dishId;
@@ -266,9 +308,10 @@
 	
 	        $('.dayform h1').text(weekArray[this.id].week);
 	        console.log(weekArray[this.id].orderArray);
-	
+	        console.log(dishesArray);
+	        console.log(weekArray);
 	        // console.log(weekArray[this.id].orderArray);
-	        newSelector.displayDishList(weekArray[this.id].orderArray);
+	        newView.displayDishList(weekArray[this.id].orderArray);
 	
 	        $('.dayform').hide();
 	
@@ -282,20 +325,56 @@
 	        var i = 0;
 	        var selectedDish = $(this)[0].id;
 	
-	        var dish = newSelector.clickDish(i, selectedDish);
-	        newSelector.addDish(currentDay, dish);
+	        var dish = newView.clickDish(i, selectedDish);
+	
+	        console.log(dish);
+	        //
+	        //  for(i=0 ; i< weekArray[currentDay].orderArray.length; i++) {
+	        //     // if the meals is in the day //
+	        //
+	        //       if( dish == weekArray[currentDay].orderArray[i] ){ // first check if its repeated
+	        //
+	        //
+	        //           weekArray[currentDay].orderArray[i].count++;
+	        //
+	        //           return;
+	        //       }
+	        //  }
+	        if (currentObjectId === null) {
+	
+	            newView.addDish(currentDay, dish);
+	
+	            newOrder.postOrder(weekArray);
+	        } else {
+	            console.log('Updating....');
+	            newView.addDish(currentDay, dish);
+	            newOrder.updateOrder(weekArray, currentObjectId);
+	        }
 	    });
+	
+	    // Adding or subtracting count
+	
+	    $('.dayform ul').on('change', 'input', function () {
+	
+	        //   weekArray[currentDay].orderArray[$(this)[0].id].count = $(this).val();
+	        // console.log(  weekArray[currentDay].orderArray[$(this)[0].id].count );
+	        //
+	
+	    });
+	    // DELETING DISH .
+	    //
+	
 	
 	    $('.dayform ul').on('click', 'p', function () {
 	
-	        console.log($(this));
-	        console.log(weekArray[currentDay].orderArray[$(this)[0].id]);
+	        // console.log($(this));
+	        // console.log(weekArray[currentDay].orderArray[$(this)[0].id]);
 	        var deletingArray = weekArray[currentDay].orderArray;
 	
 	        deletingArray.splice($(this)[0].id, 1);
 	        console.log(deletingArray);
 	
-	        newSelector.displayDishList(weekArray[currentDay].orderArray);
+	        newView.displayDishList(weekArray[currentDay].orderArray);
 	    });
 	
 	    //log in
@@ -308,7 +387,9 @@
 	    });
 	
 	    $('#login-button').click(function () {
+	
 	        console.log('clicked');
+	
 	        window.location.href = "/home.html";
 	    });
 	
@@ -360,7 +441,6 @@
 	            };
 	
 	            if (user.password !== user.password2) {
-	
 	                alert('password did not match!');
 	            }
 	
@@ -377,6 +457,7 @@
 	                username: $('#login-email-input').val(),
 	                password: $('#login-password-input').val()
 	            };
+	
 	            var ajax = $.ajax('/login', {
 	
 	                type: 'POST',
@@ -385,11 +466,10 @@
 	                contentType: 'application/json',
 	
 	                success: function success() {
-	                    console.log('user logged in!');
+	                    console.log('YOURE LOGGED IN!');
 	                },
 	                error: function error(_error) {
-	
-	                    console.log(_error);
+	                    console.log('NOPE');
 	                }
 	
 	            });
@@ -412,6 +492,7 @@
 	                contentType: 'application/json',
 	
 	                success: function success() {
+	
 	                    console.log('user created!');
 	                },
 	                error: function error(_error2) {
@@ -439,100 +520,6 @@
 
 /***/ },
 /* 2 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var View = function () {
-	    function View() {
-	        _classCallCheck(this, View);
-	    }
-	
-	    _createClass(View, [{
-	        key: 'showErrorMessage',
-	        value: function showErrorMessage(message) {}
-	    }, {
-	        key: 'showUser',
-	        value: function showUser() {
-	
-	            window.location.href = "/facebookhome.html";
-	
-	            $('#profile-pic').append('<img src=' + this.user.pictureUrl + ' alt="" />');
-	
-	            $('.show-user').text(this.user.name);
-	        }
-	    }, {
-	        key: 'showBirthday',
-	        value: function showBirthday() {}
-	    }, {
-	        key: 'updateQuestion',
-	        value: function updateQuestion() {
-	
-	            var questions = data.questions_array;
-	
-	            console.log(questions.choices);
-	
-	            $.each(questions, function (index, value) {
-	
-	                console.log(value.question);
-	
-	                var option;
-	
-	                for (var i = 0; i < value.choices.length; i++) {
-	
-	                    console.log(value.choices[i]);
-	                    console.log(value.choices.length);
-	
-	                    $('.quiz-window').append('<option value="1">' + value.choices[i] + '</option>');
-	
-	                    option = value.choices[i];
-	                    console.log('options are' + option);
-	                }
-	
-	                $('.quiz-window').append('<select><label>' + value.question + '</label>' + options + '</select>');
-	            });
-	
-	            $.each(data.questions_array.choices, function () {
-	                console.log(value);
-	            });
-	        }
-	    }, {
-	        key: 'login',
-	        value: function login() {
-	
-	            var email = $('#email-input').val();
-	            var password = $('#password-input').val();
-	            var userData = data.users;
-	
-	            if (!userData[email] || password != data.users[email].password) {
-	
-	                alert('wrong passoword or user mate!');
-	                return;
-	            }
-	
-	            this.user = new User(data.users[email].name, data.users[email].email, data.users[email].pictureUrl, data.users[email].friendList);
-	
-	            $('.sign-in').fadeOut(500, function () {});
-	
-	            this.showUser();
-	        }
-	    }]);
-	
-	    return View;
-	}();
-	
-	exports.default = View;
-
-/***/ },
-/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -10758,7 +10745,7 @@
 
 
 /***/ },
-/* 4 */
+/* 3 */
 /***/ function(module, exports) {
 
 	// Copyright Joyent, Inc. and other Node contributors.
@@ -11066,7 +11053,7 @@
 
 
 /***/ },
-/* 5 */
+/* 4 */
 /***/ function(module, exports) {
 
 	'use strict';

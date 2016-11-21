@@ -69,8 +69,15 @@ passport.use(new LocalStrategy(
     }
 ));
 
+app.get('/weeks', function(req, res){
+
+  
+
+});
+
 
 app.get('/dishes', function(req, res) {
+
 
     res.json(dishesArray);
 
@@ -100,8 +107,6 @@ app.get('/hidden', passport.authenticate('basic', {
 });
 
 app.post('/users', function(req, res) {
-
-
 
     if (!req.body) {
         return res.status(400).json({
@@ -163,65 +168,63 @@ app.post('/users', function(req, res) {
     User.createUser(newUser, function(err, user) {
         if (err) throw err;
         console.log(user);
-
+        console.log('user was CREATED!');
+        res.json(user);
     });
 
 });
 
 
 passport.use(new LocalStrategy(
-    function(username, password, done) {
+  function(username, password, done) {
+   User.getUserByUsername(username, function(err, user){
+   	if(err) throw err;
+   	if(!user){
+      console.log('Unkwown User');
+   		return done(null, false, {message: 'Unknown User'});
 
-        User.getUserByUsername(username, function(err, user) {
+   	}
 
-            if (err) throw err;
+   	User.comparePassword(password, user.password, function(err, isMatch){
+   		if(err) throw err;
 
-            if (!user) {
-                return done(null, false, {
-                    message: 'Unknown User'
-                });
-            }
+   		if(isMatch){
 
-            console.log(user);
+        console.log('You are Loggeeeeed in');
 
-            User.comparePassword(password, user.password, function(err, res) {
+   			return done(null, user);
 
-                if (err) throw err;
 
-                if (res) {
-                    return done(null, user);
+   		} else {
+          console.log('Invalid Password');
+   			return done(null, false, {message: 'Invalid password'});
+   		}
+   	});
+   });
+  }));
 
-                } else {
-                    return done(null, false, {
-                        message: 'invalid password'
-                    });
-                }
 
-            });
-
-            console.log('user logged in!');
-        });
-    }
-));
-
-passport.serializeUser(function(user, done) {
+  passport.serializeUser(function(user, done) {
     done(null, user.id);
-});
+  });
 
-passport.deserializeUser(function(id, done) {
+  passport.deserializeUser(function(id, done) {
     User.getUserById(id, function(err, user) {
-        done(err, user);
+      done(err, user);
     });
-});
+  });
 
 app.post('/login',
-    passport.authenticate('local', {
-        successRedirect: '/',
-        failureRedirect: '/login'
-    }),
-    function(req, res) {
-        res.redirect('/');
-    });
+
+  passport.authenticate('local', {successRedirect:'/', failureRedirect:'/users/login'}),
+
+  function(req, res) {
+
+
+    console.log('SUCCESS LOGIN HERE TOO');
+    res.redirect('/');
+
+  });
 
 
 app.get('/hidden', function(req, res) {
@@ -232,12 +235,43 @@ app.get('/hidden', function(req, res) {
 
 app.get('/', function(req, res) {
 
-    console.log('using the path');
+    res.render('index');
 
 });
 
 
 //   ENDPOINT FOR HANDLING DISHES
+//
+
+app.put('/order', function(req, res){
+
+    console.log(req.body);
+
+    var week=req.body.week;
+    var id= req.body._id;
+
+
+    console.log(id);
+
+    Order.findById(id, function(err,foundArray){
+
+          foundArray.update({
+            week:week
+          }, function(err,order){
+            if(err){
+              res.send("There was a problem updating the information to the database: " + err);
+            }
+            else {
+              console.log('updated successfullyy');
+                console.log(week);
+                  console.log(order);
+                  res.status(201).json(order);
+            }
+          });
+    });
+
+
+});
 
 app.post('/order', function(req, res) {
 
@@ -259,7 +293,6 @@ app.post('/order', function(req, res) {
     });
 
 });
-
 
 
 

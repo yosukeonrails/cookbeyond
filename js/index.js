@@ -2,21 +2,18 @@ var $ = require('jquery');
 var events = require('events');
 var myEmitter = new events.EventEmitter();
 import User from './users.js';
-import View from './view.js';
 var weekArray = require('./weekarray.js');
 var dishesArray = [];
 var rearrangedArray = [];
-var data;
 var selectedArray=[];
-
+var data;
+var currentObjectId=null;
+var i=0;
+ var repeatedArray=[];
 
 class Order {
 
     postOrder(dishesArray) {
-
-        // handle post request
-
-
 
         var ajax = $.ajax('/order', {
             type: 'POST',
@@ -25,7 +22,9 @@ class Order {
             contentType: 'application/json',
 
             success: function(data) {
-                console.log(data.week);
+
+           currentObjectId = data._id;
+
             },
             error: function(error) {
                 console.log(error);
@@ -33,7 +32,43 @@ class Order {
         });
     }
 
+    // updateDish(){
+    //
+    //
+    //
+    //   this.updateOrder(weekArray, id);
+    // }
 
+
+    updateOrder(weekArray, id){
+
+        //take id to find the id in post ,
+        // update it by posting back the weekArray
+        var updatingOrder= {
+           week:weekArray,
+           _id:id
+        };
+
+        var ajax = $.ajax('/order', {
+            type: 'PUT',
+            data: JSON.stringify(updatingOrder),
+            dataType: 'json',
+            contentType: 'application/json',
+
+            success: function(data) {
+
+
+              console.log('UPDATED');
+
+
+            },
+            error: function(error) {
+                console.log(error);
+            }
+        });
+
+
+    }
 
 }
 
@@ -49,8 +84,9 @@ class View{
 
   clickDish(i,selectedDish) {
       for (i = 0; i < dishesArray.length; i++) {
+
           if (selectedDish == dishesArray[i].dishId) {
-            console.log(weekArray);
+
               return dishesArray[i];
 
           }
@@ -59,27 +95,42 @@ class View{
 
   addDish(currentDay,dish){
 
-   selectedArray= weekArray[currentDay].orderArray;
+    console.log(selectedArray);
 
-      selectedArray.push(dish);
-      // console.log(selectedArray);
+    console.log(weekArray);
 
-      this.displayDishList(selectedArray);
+    selectedArray= weekArray[currentDay].orderArray;
+
+
+    selectedArray.push(dish);
+
+    this.displayDishList(selectedArray);
+
+
+
   }
 
+addRepeatedDish(currentDay,dish,i){
+
+  // selectedArray= weekArray[currentDay].orderArray[i].count;
+  //
+  //    selectedArray.orderArray[i].count.push(dish);
+
+  }
+
+
+
   displayDishList(selectedArray){
+
 
    var i=0;
      $('.dayform li').remove();
     for(i=0; i<selectedArray.length; i++){
 
-        $('.dayform ul').append('<li >'+selectedArray[i].name+'<p id='+i+'> delete </p></li>');
+        $('.dayform ul').append('<li >'+selectedArray[i].name+'<input type="number" id='+i+'  min="0" name="name" value=""></input>'+'<p id='+i+'> delete </p></li>');
           $('.dayform ul').append();
-        console.log(i);
     }
-
   }
-
 }
 
 var displayWeek = function(i, week) {
@@ -106,10 +157,8 @@ function arrangeArray() {
             $('.weekslot').remove();
             weekArray = [];
             for (i = 0; i < 7; i++) {
-
                 weekArray.push(rearrangedArray[i]);
                 displayWeek(i, rearrangedArray[i].week);
-
             }
         }
     }
@@ -140,7 +189,6 @@ $(document).ready(function() {
 
     console.log('somgthing here');
 
-    var appView = new View();
     var appUser = new User();
 
     var dishId;
@@ -156,7 +204,6 @@ $(document).ready(function() {
 
 
         }
-
 
     }
 
@@ -219,7 +266,8 @@ $(document).ready(function() {
 
         $('.dayform h1').text(weekArray[this.id].week);
           console.log(weekArray[this.id].orderArray);
-
+          console.log(dishesArray);
+          console.log(weekArray);
         // console.log(weekArray[this.id].orderArray);
         newView.displayDishList(weekArray[this.id].orderArray);
 
@@ -240,22 +288,64 @@ $(document).ready(function() {
           var i=0;
           var selectedDish = $(this)[0].id;
 
-        var dish=  newView.clickDish(i, selectedDish);
-          newView.addDish(currentDay, dish);
+           var dish=  newView.clickDish(i, selectedDish);
+
+            console.log(dish);
+             //
+            //  for(i=0 ; i< weekArray[currentDay].orderArray.length; i++) {
+            //     // if the meals is in the day //
+             //
+            //       if( dish == weekArray[currentDay].orderArray[i] ){ // first check if its repeated
+             //
+             //
+            //           weekArray[currentDay].orderArray[i].count++;
+             //
+            //           return;
+            //       }
+            //  }
+             if(currentObjectId===null){
+
+              newView.addDish(currentDay, dish);
+
+               newOrder.postOrder(weekArray);
+
+             } else {
+                console.log('Updating....');
+                newView.addDish(currentDay, dish);
+                newOrder.updateOrder(weekArray,currentObjectId);
+
+             }
+
+
+
+
     });
 
-    // DELETING DISH //
+    // Adding or subtracting count
+
+    $('.dayform ul').on('change','input', function(){
+
+
+      //   weekArray[currentDay].orderArray[$(this)[0].id].count = $(this).val();
+      // console.log(  weekArray[currentDay].orderArray[$(this)[0].id].count );
+      //
+
+    });
+    // DELETING DISH .
+    //
+
 
     $('.dayform ul').on('click', 'p', function(){
 
-          console.log($(this));
-          console.log(weekArray[currentDay].orderArray[$(this)[0].id]);
+          // console.log($(this));
+          // console.log(weekArray[currentDay].orderArray[$(this)[0].id]);
           var deletingArray= weekArray[currentDay].orderArray;
 
           deletingArray.splice($(this)[0].id, 1);
             console.log(deletingArray);
 
           newView.displayDishList(weekArray[currentDay].orderArray);
+
 
     });
 
@@ -269,11 +359,14 @@ $(document).ready(function() {
         event.preventDefault();
         console.log('clicked');
         appUser.logInUser();
+
     });
 
 
     $('#login-button').click(function() {
+
         console.log('clicked');
+
         window.location.href = "/home.html";
 
 
