@@ -47,7 +47,7 @@
     "express": "^4.14.0",
     "express-handlebars": "*",
     "express-messages": "*",
-    "express-session": "*",
+    "express-session": "^1.14.2",
     "express-validator": "*",
     "jquery": "^3.1.1",
     "materialize-css": "^0.97.7",

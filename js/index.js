@@ -5,26 +5,42 @@ import User from './users.js';
 var weekArray = require('./weekarray.js');
 var dishesArray = [];
 var rearrangedArray = [];
-var selectedArray=[];
+var selectedArray = [];
 var data;
-var currentObjectId=null;
-var i=0;
- var repeatedArray=[];
+var currentObjectId = null;
+var i = 0;
+var repeatedArray = [];
+var currentArray = [];
+
+
+  const STATE = {
+
+      userOrder:{},
+      currentObjectId:{}
+
+  };
 
 class Order {
 
-    postOrder(dishesArray) {
+    postOrder(days) {
+
+          var  orderData = {
+              days:days
+            };
 
         var ajax = $.ajax('/order', {
             type: 'POST',
-            data: JSON.stringify(dishesArray),
+            data: JSON.stringify(orderData),
             dataType: 'json',
             contentType: 'application/json',
 
             success: function(data) {
 
-           currentObjectId = data._id;
-
+                 STATE.userOrder[data._id]=data;
+                 console.log('here is the data back:');
+                 console.log(STATE.userOrder);
+                 console.log(STATE.userOrder[data._id]._id);
+                 currentObjectId=STATE.userOrder[data._id]._id;
             },
             error: function(error) {
                 console.log(error);
@@ -40,13 +56,13 @@ class Order {
     // }
 
 
-    updateOrder(weekArray, id){
+    updateOrder(days, id) {
 
-        //take id to find the id in post ,
-        // update it by posting back the weekArray
-        var updatingOrder= {
-           week:weekArray,
-           _id:id
+        var updatingOrder = {
+             week:{
+               days:days
+             },
+            _id: id
         };
 
         var ajax = $.ajax('/order', {
@@ -57,10 +73,8 @@ class Order {
 
             success: function(data) {
 
-
-              console.log('UPDATED');
-
-
+                console.log(data);
+                console.log('UPDATED');
             },
             error: function(error) {
                 console.log(error);
@@ -79,58 +93,74 @@ class Order {
 
 
 
-class View{
+class View {
 
+    getCurrentArray(id){
 
-  clickDish(i,selectedDish) {
-      for (i = 0; i < dishesArray.length; i++) {
+              var ajax = $.ajax('/order/'+id, {
 
-          if (selectedDish == dishesArray[i].dishId) {
+                  type: 'GET',
 
-              return dishesArray[i];
+                  success: function(data) {
+                      console.log(data);
+                      console.log('DISPLAYING CURRENTARRAY');
+                  },
 
-          }
-      }
-  }
+                  error: function(error) {
+                      console.log(error);
+                  }
+              });
 
-  addDish(currentDay,dish){
-
-    console.log(selectedArray);
-
-    console.log(weekArray);
-
-    selectedArray= weekArray[currentDay].orderArray;
-
-
-    selectedArray.push(dish);
-
-    this.displayDishList(selectedArray);
-
-
-
-  }
-
-addRepeatedDish(currentDay,dish,i){
-
-  // selectedArray= weekArray[currentDay].orderArray[i].count;
-  //
-  //    selectedArray.orderArray[i].count.push(dish);
-
-  }
-
-
-
-  displayDishList(selectedArray){
-
-
-   var i=0;
-     $('.dayform li').remove();
-    for(i=0; i<selectedArray.length; i++){
-
-        $('.dayform ul').append('<li >'+selectedArray[i].name+'<input type="number" id='+i+'  min="0" name="name" value=""></input>'+'<p id='+i+'> delete </p></li>');
-          $('.dayform ul').append();
     }
-  }
+
+    clickDish(i, selectedDish) {
+        for (i = 0; i < dishesArray.length; i++) {
+
+            if (selectedDish == dishesArray[i].dishId) {
+
+                return dishesArray[i];
+
+            }
+        }
+    }
+
+    addDish(currentDay, dish) {
+
+        console.log(selectedArray);
+
+        console.log(weekArray);
+
+        selectedArray = weekArray[currentDay].orderArray;
+
+        selectedArray.push(dish);
+
+        this.displayDishList(selectedArray);
+
+
+
+    }
+
+    addRepeatedDish(currentDay, dish, i) {
+
+        // selectedArray= weekArray[currentDay].orderArray[i].count;
+        //
+        //    selectedArray.orderArray[i].count.push(dish);
+
+    }
+
+
+
+    displayDishList(selectedArray) {
+
+
+        var i = 0;
+        $('.dayform li').remove();
+        for (i = 0; i < selectedArray.length; i++) {
+
+            $('.dayform ul').append('<li >' + selectedArray[i].name + '<input type="number" id=' + i + '  min="0" name="name" value=""></input>' + '<p id=' + i + '> delete </p></li>');
+            $('.dayform ul').append();
+        }
+    }
 }
 
 var displayWeek = function(i, week) {
@@ -176,7 +206,7 @@ function displayFood(dishes) {
 $(document).ready(function() {
 
     var newOrder = new Order();
-    var newView= new View();
+    var newView = new View();
 
     $.get('/dishes', (data) => { //  data is the json data responded //
 
@@ -185,6 +215,8 @@ $(document).ready(function() {
         optionView();
 
     });
+
+
 
 
     console.log('somgthing here');
@@ -265,9 +297,9 @@ $(document).ready(function() {
 
 
         $('.dayform h1').text(weekArray[this.id].week);
-          console.log(weekArray[this.id].orderArray);
-          console.log(dishesArray);
-          console.log(weekArray);
+        console.log(weekArray[this.id].orderArray);
+        console.log(dishesArray);
+        console.log(weekArray);
         // console.log(weekArray[this.id].orderArray);
         newView.displayDishList(weekArray[this.id].orderArray);
 
@@ -275,7 +307,7 @@ $(document).ready(function() {
 
         $('.dayform').show();
 
-        currentDay=this.id;
+        currentDay = this.id;
 
 
     });
@@ -285,37 +317,32 @@ $(document).ready(function() {
 
     $('.food-div').on('click', '.foodslot', function() {
 
-          var i=0;
-          var selectedDish = $(this)[0].id;
+        var i = 0;
+        var selectedDish = $(this)[0].id;
 
-           var dish=  newView.clickDish(i, selectedDish);
+        var dish = newView.clickDish(i, selectedDish);
 
-            console.log(dish);
-             //
-            //  for(i=0 ; i< weekArray[currentDay].orderArray.length; i++) {
-            //     // if the meals is in the day //
-             //
-            //       if( dish == weekArray[currentDay].orderArray[i] ){ // first check if its repeated
-             //
-             //
-            //           weekArray[currentDay].orderArray[i].count++;
-             //
-            //           return;
-            //       }
-            //  }
-             if(currentObjectId===null){
 
-              newView.addDish(currentDay, dish);
+        console.log(dish);
 
-               newOrder.postOrder(weekArray);
 
-             } else {
-                console.log('Updating....');
-                newView.addDish(currentDay, dish);
-                newOrder.updateOrder(weekArray,currentObjectId);
 
-             }
+        if ( currentObjectId ===null ) {
 
+            newView.addDish(currentDay, dish);
+            newOrder.postOrder( weekArray);
+
+
+        } else {
+          console.log(STATE.userOrder);
+              console.log('NODDASDSA');
+            console.log('Updating....');
+            newView.addDish(currentDay, dish);
+            // newOrder.postOrder(weekArray[currentDay].week, week[currentDay] );
+            newOrder.updateOrder(weekArray, currentObjectId);
+            // console.log(currentObjectId);
+            // newView.getCurrentArray(currentObjectId);
+        }
 
 
 
@@ -323,28 +350,29 @@ $(document).ready(function() {
 
     // Adding or subtracting count
 
-    $('.dayform ul').on('change','input', function(){
+    $('.dayform ul').on('change', 'input', function() {
 
 
-      //   weekArray[currentDay].orderArray[$(this)[0].id].count = $(this).val();
-      // console.log(  weekArray[currentDay].orderArray[$(this)[0].id].count );
-      //
+        //   weekArray[currentDay].orderArray[$(this)[0].id].count = $(this).val();
+        // console.log(  weekArray[currentDay].orderArray[$(this)[0].id].count );
+        //
 
     });
     // DELETING DISH .
     //
 
 
-    $('.dayform ul').on('click', 'p', function(){
+    $('.dayform ul').on('click', 'p', function() {
 
-          // console.log($(this));
-          // console.log(weekArray[currentDay].orderArray[$(this)[0].id]);
-          var deletingArray= weekArray[currentDay].orderArray;
+        // console.log($(this));
+        // console.log(weekArray[currentDay].orderArray[$(this)[0].id]);
+        var deletingArray = weekArray[currentDay].orderArray;
 
-          deletingArray.splice($(this)[0].id, 1);
-            console.log(deletingArray);
+        deletingArray.splice($(this)[0].id, 1);
+        console.log(deletingArray);
 
-          newView.displayDishList(weekArray[currentDay].orderArray);
+        newOrder.updateOrder(weekArray, currentObjectId);
+        newView.displayDishList(weekArray[currentDay].orderArray);
 
 
     });

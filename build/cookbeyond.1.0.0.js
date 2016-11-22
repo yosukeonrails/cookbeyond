@@ -68,6 +68,14 @@
 	var currentObjectId = null;
 	var i = 0;
 	var repeatedArray = [];
+	var currentArray = [];
+	
+	var STATE = {
+	
+	    userOrder: {},
+	    currentObjectId: {}
+	
+	};
 	
 	var Order = function () {
 	    function Order() {
@@ -76,17 +84,25 @@
 	
 	    _createClass(Order, [{
 	        key: 'postOrder',
-	        value: function postOrder(dishesArray) {
+	        value: function postOrder(days) {
+	
+	            var orderData = {
+	                days: days
+	            };
 	
 	            var ajax = $.ajax('/order', {
 	                type: 'POST',
-	                data: JSON.stringify(dishesArray),
+	                data: JSON.stringify(orderData),
 	                dataType: 'json',
 	                contentType: 'application/json',
 	
 	                success: function success(data) {
 	
-	                    currentObjectId = data._id;
+	                    STATE.userOrder[data._id] = data;
+	                    console.log('here is the data back:');
+	                    console.log(STATE.userOrder);
+	                    console.log(STATE.userOrder[data._id]._id);
+	                    currentObjectId = STATE.userOrder[data._id]._id;
 	                },
 	                error: function error(_error) {
 	                    console.log(_error);
@@ -104,12 +120,12 @@
 	
 	    }, {
 	        key: 'updateOrder',
-	        value: function updateOrder(weekArray, id) {
+	        value: function updateOrder(days, id) {
 	
-	            //take id to find the id in post ,
-	            // update it by posting back the weekArray
 	            var updatingOrder = {
-	                week: weekArray,
+	                week: {
+	                    days: days
+	                },
 	                _id: id
 	            };
 	
@@ -121,6 +137,7 @@
 	
 	                success: function success(data) {
 	
+	                    console.log(data);
 	                    console.log('UPDATED');
 	                },
 	                error: function error(_error2) {
@@ -144,6 +161,24 @@
 	    }
 	
 	    _createClass(View, [{
+	        key: 'getCurrentArray',
+	        value: function getCurrentArray(id) {
+	
+	            var ajax = $.ajax('/order/' + id, {
+	
+	                type: 'GET',
+	
+	                success: function success(data) {
+	                    console.log(data);
+	                    console.log('DISPLAYING CURRENTARRAY');
+	                },
+	
+	                error: function error(_error3) {
+	                    console.log(_error3);
+	                }
+	            });
+	        }
+	    }, {
 	        key: 'clickDish',
 	        value: function clickDish(i, selectedDish) {
 	            for (i = 0; i < dishesArray.length; i++) {
@@ -328,27 +363,20 @@
 	        var dish = newView.clickDish(i, selectedDish);
 	
 	        console.log(dish);
-	        //
-	        //  for(i=0 ; i< weekArray[currentDay].orderArray.length; i++) {
-	        //     // if the meals is in the day //
-	        //
-	        //       if( dish == weekArray[currentDay].orderArray[i] ){ // first check if its repeated
-	        //
-	        //
-	        //           weekArray[currentDay].orderArray[i].count++;
-	        //
-	        //           return;
-	        //       }
-	        //  }
+	
 	        if (currentObjectId === null) {
 	
 	            newView.addDish(currentDay, dish);
-	
 	            newOrder.postOrder(weekArray);
 	        } else {
+	            console.log(STATE.userOrder);
+	            console.log('NODDASDSA');
 	            console.log('Updating....');
 	            newView.addDish(currentDay, dish);
+	            // newOrder.postOrder(weekArray[currentDay].week, week[currentDay] );
 	            newOrder.updateOrder(weekArray, currentObjectId);
+	            // console.log(currentObjectId);
+	            // newView.getCurrentArray(currentObjectId);
 	        }
 	    });
 	
@@ -374,6 +402,7 @@
 	        deletingArray.splice($(this)[0].id, 1);
 	        console.log(deletingArray);
 	
+	        newOrder.updateOrder(weekArray, currentObjectId);
 	        newView.displayDishList(weekArray[currentDay].orderArray);
 	    });
 	

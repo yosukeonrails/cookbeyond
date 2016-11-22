@@ -11,7 +11,7 @@ mongoose.connection.on('error', function(err) {
     console.error('Could not connect.  Error:', err);
 });
 
-
+var cookieParser= require('cookie-parser');
 var http = require('http');
 var express = require('express');
 var bodyParser = require('body-parser');
@@ -22,7 +22,7 @@ var bcrypt = require('bcryptjs');
 var app = express();
 var passport = require('passport');
 var dishesArray = require('./js/dishes.js');
-
+var session= require("express-session");
 var server = http.Server(app);
 var socket_io = require('socket.io');
 var io = socket_io(server);
@@ -32,6 +32,12 @@ var LocalStrategy = require('passport-local').Strategy;
 
 app.use(bodyParser.json());
 app.use(express.static('build'));
+app.use(cookieParser());
+app.use(session({
+  secret:'whatever'
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 
 var User = require('./models/users.js');
 var Order = require('./models/order.js');
@@ -69,15 +75,10 @@ passport.use(new LocalStrategy(
     }
 ));
 
-app.get('/weeks', function(req, res){
 
-  
-
-});
 
 
 app.get('/dishes', function(req, res) {
-
 
     res.json(dishesArray);
 
@@ -89,7 +90,7 @@ app.get('/dishes', function(req, res) {
 // USER AUTH//
 //
 //
-app.use(passport.initialize());
+
 
 
 app.get('/hidden', passport.authenticate('basic', {
@@ -176,7 +177,9 @@ app.post('/users', function(req, res) {
 
 
 passport.use(new LocalStrategy(
+
   function(username, password, done) {
+
    User.getUserByUsername(username, function(err, user){
    	if(err) throw err;
    	if(!user){
@@ -214,15 +217,29 @@ passport.use(new LocalStrategy(
     });
   });
 
+
+function isLoggedIn(req, res, next) {
+    /* For production */
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    /* For testing, inject a user manually */
+    if (process.env.NODE_ENV !== 'production' ) {
+        req.user = { '_id': '1', 'username': 'test', 'password': 'test' };
+        return next();
+    }
+    res.sendStatus(403);
+}
+
+
+
 app.post('/login',
 
-  passport.authenticate('local', {successRedirect:'/', failureRedirect:'/users/login'}),
+  passport.authenticate('local'),
 
   function(req, res) {
 
-
-    console.log('SUCCESS LOGIN HERE TOO');
-    res.redirect('/');
+        res.json(req.user);
 
   });
 
@@ -242,50 +259,80 @@ app.get('/', function(req, res) {
 
 //   ENDPOINT FOR HANDLING DISHES
 //
+app.get('/order/:id', function(req, res){
 
-app.put('/order', function(req, res){
+    var id = req.params.id;
 
-    console.log(req.body);
+  Order.find({_id:id}, function(err, data) {
+      if (err) throw err;
 
-    var week=req.body.week;
-    var id= req.body._id;
+      // show the one user
+      res.json(data);
+      console.log('found one DISH ARRAY:');
+      console.log(data);
 
-
-    console.log(id);
-
-    Order.findById(id, function(err,foundArray){
-
-          foundArray.update({
-            week:week
-          }, function(err,order){
-            if(err){
-              res.send("There was a problem updating the information to the database: " + err);
-            }
-            else {
-              console.log('updated successfullyy');
-                console.log(week);
-                  console.log(order);
-                  res.status(201).json(order);
-            }
-          });
     });
 
 
 });
 
+
+app.put('/order', function(req, res){
+
+    console.log(req.body);
+
+    var id= req.body._id;
+
+
+
+    Order.findById(id, function(err,foundArray){
+
+      console.log('here is the found Array');
+        console.log(foundArray);
+
+          foundArray.update({
+
+            user:req.user._id,
+            week:[req.body.week],
+            startDate:new Date(),
+            endDate: new Date()
+
+          }, function(err,order){
+            if(err){
+
+              return res.status(500).json({
+                  message: 'Internal Server Error'
+              });
+            }
+
+            res.status(201).json(order);
+            console.log('oreder updated');
+              console.log(order);
+
+          });
+    });
+
+});
+
 app.post('/order', function(req, res) {
 
+  console.log('req body looks like:');
   console.log(req.body);
-
+// req.body has to look like {day:'Monday',dishes:[{object}, {object}]}
     Order.create({
 
-      week:req.body
+      user:req.user._id,
+      week:[req.body],
+      startDate:new Date(),
+      endDate: new Date()
 
     }, function(err, order) {
         if (err) {
+            console.log(err);
             return res.status(500).json({
                 message: 'Internal Server Error'
             });
+
         }
         res.status(201).json(order);
         console.log(order);
