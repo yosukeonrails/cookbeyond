@@ -11,9 +11,39 @@ var currentObjectId = null;
 var i = 0;
 var repeatedArray = [];
 var currentArray = [];
+var $ = require('jquery');
+var bootstrap = require('bootstrap');
+
+var thisYear= new Date().getFullYear();
+var thisMonth=new Date().getMonth();
+var thisDay=new Date().getDate();
+var thisWeekDay= new Date().getDay();
+var weekChanger= -1;
+var weekDays;
+var renderingWeekArray=[];
+var testingDate= new Date();
+var testingDay= new Date(2016, 10, 21).getDate();
+var testingWeekday= thisWeekDay;
+var currentSelectedDay;
+var dishList=[];
+
+testingDate.setDate(testingDate.getDate() - testingWeekday + weekChanger );
+                 // 30 - 3 = 27 of Novermber
+                 // 1 - 2 = 30 of OCtober
+
+
+
+  // when the user first sees the calendar,
+  // the person sees the week that day are in.
+
+
+
+
+
 
 
   const STATE = {
+
 
       userOrder:{},
       currentObjectId:{}
@@ -22,11 +52,13 @@ var currentArray = [];
 
 class Order {
 
-    postOrder(days) {
+    postOrder(dish,currentSelectedDay) {
 
-          var  orderData = {
-              days:days
-            };
+      var orderData= {
+        dayInfo: currentSelectedDay,
+        dish:dish,
+        dateId: currentSelectedDay.dateId
+      };
 
         var ajax = $.ajax('/order', {
             type: 'POST',
@@ -95,6 +127,25 @@ class Order {
 
 class View {
 
+  renderDay(dayObject){
+
+  var mS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+
+  var wS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+
+
+  if(dayObject.day==thisDay ){
+
+    $('.calendardiv ul').append('<li style="color:red "id='+dayObject.dateId+'>'+wS[dayObject.weekday]+'      '+mS[dayObject.month]+ '   ' +dayObject.day+ '</li>');
+  }
+ else {
+     $('.calendardiv ul').append('<li id='+dayObject.dateId+'>'+wS[dayObject.weekday]+'      '+mS[dayObject.month]+ '   ' +dayObject.day+ '</li>');
+ }
+
+
+  }
+
     getCurrentArray(id){
 
               var ajax = $.ajax('/order/'+id, {
@@ -114,6 +165,7 @@ class View {
     }
 
     clickDish(i, selectedDish) {
+
         for (i = 0; i < dishesArray.length; i++) {
 
             if (selectedDish == dishesArray[i].dishId) {
@@ -124,19 +176,11 @@ class View {
         }
     }
 
-    addDish(currentDay, dish) {
+    addDish(currentSelectedDay, dish) {
 
-        console.log(selectedArray);
-
-        console.log(weekArray);
-
-        selectedArray = weekArray[currentDay].orderArray;
-
-        selectedArray.push(dish);
+        dishList.push(dish);
 
         this.displayDishList(selectedArray);
-
-
 
     }
 
@@ -205,8 +249,50 @@ function displayFood(dishes) {
 
 $(document).ready(function() {
 
+
     var newOrder = new Order();
     var newView = new View();
+  var appUser = new User();
+  var dishId;
+  var currentDay;
+  var i;
+
+  // renders the calendar//
+  //
+
+
+    for (i=0 ; i< 7 ; i++) {
+        testingDate.setDate(testingDate.getDate() + 1 );
+
+        var dayObject = {
+        		day:testingDate.getDate(),
+            weekday:testingDate.getDay(),
+            month:testingDate.getMonth(),
+            year:testingDate.getFullYear(),
+      dateId:testingDate.getDate()+''+testingDate.getMonth()+''+testingDate.getFullYear()
+    };
+
+        renderingWeekArray.push(dayObject);
+
+        newView.renderDay(dayObject, i);
+    }
+
+
+
+// on click of days return a selectedDay
+
+      $('.calendardiv ul').on('click', 'li', function(){
+          console.log(renderingWeekArray);
+    console.log(  this.id );
+      for (i=0 ; i< renderingWeekArray.length ; i++) {
+              if(this.id==renderingWeekArray[i].dateId){
+
+                  currentSelectedDay= renderingWeekArray[i];
+                  console.log(currentSelectedDay);
+              }
+      }
+
+      });
 
     $.get('/dishes', (data) => { //  data is the json data responded //
 
@@ -218,14 +304,6 @@ $(document).ready(function() {
 
 
 
-
-    console.log('somgthing here');
-
-    var appUser = new User();
-
-    var dishId;
-    var currentDay;
-    var i;
 
 
     function optionView() {
@@ -326,15 +404,13 @@ $(document).ready(function() {
         console.log(dish);
 
 
-
         if ( currentObjectId ===null ) {
 
-            newView.addDish(currentDay, dish);
-            newOrder.postOrder( weekArray);
-
+            console.log(dish);
+            newOrder.postOrder( dish , currentSelectedDay);
 
         } else {
-          console.log(STATE.userOrder);
+            console.log(STATE.userOrder);
               console.log('NODDASDSA');
             console.log('Updating....');
             newView.addDish(currentDay, dish);

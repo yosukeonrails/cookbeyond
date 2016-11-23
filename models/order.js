@@ -7,18 +7,25 @@ var OrderSchema = new mongoose.Schema({
         type: String
     },
 
-    startDate: {
-        type: Date
-    },
-    endDate: {
-        type: Date
+    date: {
+        type:Date
     },
 
-    week:[{
-         days:{
-           type:Object
-         }
-    }]
+    dishes:[
+      {
+
+        dish:{
+          type:Object
+        }
+      }
+    ],
+
+ dateId: {
+   type:String
+ },
+ total:{
+   type:Number
+ }
 
 });
 

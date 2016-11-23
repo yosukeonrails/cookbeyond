@@ -1,3 +1,6 @@
+@import (inline) "../node_modules/bootstrap/dist/css/bootstrap.css";
+
+
 @white: #f0f8f3;
 @white2: #EFF0F1;
 @green1: #5dbb70;
@@ -56,13 +59,47 @@ body {
     margin: 0;
     padding: 0;
     background-color: @white;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
+// extra for order2.html - BEGIN
+
+.calendardiv {
+
+    li{
+      border: 1px solid black;
+      border-radius: 4px;
+      font-size: 20px;
+      font-family:@font1;
+      padding: 10px;
+       }
+}
+
+
+// extra for order2.html - END
+
 .header {
+
     height: 70px;
+
     background-color: @green;
     margin: 0;
     padding: 0;
+
+    p{
+       text-align: center;
+
+    }
+    i{
+   display: inline;
+   float:left;
+        font-size: 30px;
+        color:white;
+
+
+
+    }
 }
 
 .logo {
@@ -303,7 +340,6 @@ button {
   margin-top:50px;
 
 
-
   label{
     text-align: center;
     font-family: @baloo;
@@ -413,6 +449,7 @@ button {
      .centralize;
 
   }
+
   h4 {
    text-align: left;
    // width: 150px;

@@ -11,7 +11,7 @@ mongoose.connection.on('error', function(err) {
     console.error('Could not connect.  Error:', err);
 });
 
-var cookieParser= require('cookie-parser');
+var cookieParser = require('cookie-parser');
 var http = require('http');
 var express = require('express');
 var bodyParser = require('body-parser');
@@ -22,7 +22,7 @@ var bcrypt = require('bcryptjs');
 var app = express();
 var passport = require('passport');
 var dishesArray = require('./js/dishes.js');
-var session= require("express-session");
+var session = require("express-session");
 var server = http.Server(app);
 var socket_io = require('socket.io');
 var io = socket_io(server);
@@ -34,7 +34,7 @@ app.use(bodyParser.json());
 app.use(express.static('build'));
 app.use(cookieParser());
 app.use(session({
-  secret:'whatever'
+    secret: 'whatever'
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -178,44 +178,48 @@ app.post('/users', function(req, res) {
 
 passport.use(new LocalStrategy(
 
-  function(username, password, done) {
+    function(username, password, done) {
 
-   User.getUserByUsername(username, function(err, user){
-   	if(err) throw err;
-   	if(!user){
-      console.log('Unkwown User');
-   		return done(null, false, {message: 'Unknown User'});
+        User.getUserByUsername(username, function(err, user) {
+            if (err) throw err;
+            if (!user) {
+                console.log('Unkwown User');
+                return done(null, false, {
+                    message: 'Unknown User'
+                });
 
-   	}
+            }
 
-   	User.comparePassword(password, user.password, function(err, isMatch){
-   		if(err) throw err;
+            User.comparePassword(password, user.password, function(err, isMatch) {
+                if (err) throw err;
 
-   		if(isMatch){
+                if (isMatch) {
 
-        console.log('You are Loggeeeeed in');
+                    console.log('You are Loggeeeeed in');
 
-   			return done(null, user);
-
-
-   		} else {
-          console.log('Invalid Password');
-   			return done(null, false, {message: 'Invalid password'});
-   		}
-   	});
-   });
-  }));
+                    return done(null, user);
 
 
-  passport.serializeUser(function(user, done) {
+                } else {
+                    console.log('Invalid Password');
+                    return done(null, false, {
+                        message: 'Invalid password'
+                    });
+                }
+            });
+        });
+    }));
+
+
+passport.serializeUser(function(user, done) {
     done(null, user.id);
-  });
+});
 
-  passport.deserializeUser(function(id, done) {
+passport.deserializeUser(function(id, done) {
     User.getUserById(id, function(err, user) {
-      done(err, user);
+        done(err, user);
     });
-  });
+});
 
 
 function isLoggedIn(req, res, next) {
@@ -224,24 +228,31 @@ function isLoggedIn(req, res, next) {
         return next();
     }
     /* For testing, inject a user manually */
-    if (process.env.NODE_ENV !== 'production' ) {
-        req.user = { '_id': '1', 'username': 'test', 'password': 'test' };
+    if (process.env.NODE_ENV == 'test') {
+
+        req.user = {
+            '_id': '1',
+            'username': 'test',
+            'password': 'test'
+        };
         return next();
     }
+
     res.sendStatus(403);
 }
 
 
 
+
 app.post('/login',
 
-  passport.authenticate('local'),
+    passport.authenticate('local'),
 
-  function(req, res) {
+    function(req, res) {
 
         res.json(req.user);
 
-  });
+    });
 
 
 app.get('/hidden', function(req, res) {
@@ -259,84 +270,100 @@ app.get('/', function(req, res) {
 
 //   ENDPOINT FOR HANDLING DISHES
 //
-app.get('/order/:id', function(req, res){
+app.get('/order/:dateid', function(req, res) {
 
-    var id = req.params.id;
+    var dateId = req.params.dateid;
 
-  Order.find({_id:id}, function(err, data) {
-      if (err) throw err;
+    Order.find({
 
-      // show the one user
-      res.json(data);
-      console.log('found one DISH ARRAY:');
-      console.log(data);
+            user: req.user._id,
+            dateId: dateId
 
-    });
+        },
+
+        function(err, data) {
+            if (err) throw err;
+
+            // show the one user
+            res.json(data);
+            console.log('found one DISH ARRAY:');
+            console.log(data);
+
+        });
 
 
 });
 
 
-app.put('/order', function(req, res){
+app.put('/order', isLoggedIn, function(req, res) {
 
     console.log(req.body);
 
-    var id= req.body._id;
+    var id = req.body._id;
 
 
+    Order.findById(id, function(err, foundArray) {
 
-    Order.findById(id, function(err,foundArray){
-
-      console.log('here is the found Array');
+        console.log('here is the found Array');
         console.log(foundArray);
 
-          foundArray.update({
+        foundArray.update({
 
-            user:req.user._id,
-            week:[req.body.week],
-            startDate:new Date(),
+            user: req.user._id,
+            week: [req.body.week],
+            startDate: new Date(),
             endDate: new Date()
 
-          }, function(err,order){
-            if(err){
+        }, function(err, order) {
+            if (err) {
 
-              return res.status(500).json({
-                  message: 'Internal Server Error'
-              });
+                return res.status(500).json({
+                    message: 'Internal Server Error'
+                });
             }
 
             res.status(201).json(order);
             console.log('oreder updated');
-              console.log(order);
+            console.log(order);
 
-          });
+        });
     });
 
 });
 
 app.post('/order', function(req, res) {
 
-  console.log('req body looks like:');
-  console.log(req.body);
-// req.body has to look like {day:'Monday',dishes:[{object}, {object}]}
-    Order.create({
+    var dish = req.body.dish;
+    var date = req.body.date;
 
-      user:req.user._id,
-      week:[req.body],
-      startDate:new Date(),
-      endDate: new Date()
+    var query = {
+        user: req.user._id,
+        date: req.body.date
 
-    }, function(err, order) {
-        if (err) {
-            console.log(err);
-            return res.status(500).json({
-                message: 'Internal Server Error'
-            });
+    };
 
+    var update = {
+        $push: {
+            dishes: {
+                dish: dish,
+
+            }
+        },
+
+        $inc: {
+            total: req.body.price
         }
-        res.status(201).json(order);
-        console.log(order);
-        console.log('oreder succeeded');
+    };
+
+  Order.findOneAndUpdate(query, update, {
+        upsert: true,
+        new: true
+    }, function(err, data) {
+
+        console.log(err);
+
+        res.status(201).json(data);
+
     });
 
 });
