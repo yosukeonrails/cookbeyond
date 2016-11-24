@@ -14,51 +14,52 @@ var currentArray = [];
 var $ = require('jquery');
 var bootstrap = require('bootstrap');
 
-var thisYear= new Date().getFullYear();
-var thisMonth=new Date().getMonth();
-var thisDay=new Date().getDate();
-var thisWeekDay= new Date().getDay();
-var weekChanger= -1;
+var thisYear = new Date().getFullYear();
+var thisMonth = new Date().getMonth();
+var thisDay = new Date().getDate();
+var thisWeekDay = new Date().getDay();
+var weekChanger = -1;
 var weekDays;
-var renderingWeekArray=[];
-var testingDate= new Date();
-var testingDay= new Date(2016, 10, 21).getDate();
-var testingWeekday= thisWeekDay;
+var renderingWeekArray = [];
+var testingDate = new Date();
+var testingDay = new Date(2016, 10, 21).getDate();
+var testingWeekday = thisWeekDay;
 var currentSelectedDay;
-var dishList=[];
+var dishList = [];
 
-testingDate.setDate(testingDate.getDate() - testingWeekday + weekChanger );
-                 // 30 - 3 = 27 of Novermber
-                 // 1 - 2 = 30 of OCtober
-
-
-
-  // when the user first sees the calendar,
-  // the person sees the week that day are in.
+testingDate.setDate(testingDate.getDate() - testingWeekday + weekChanger);
+// 30 - 3 = 27 of Novermber
+// 1 - 2 = 30 of OCtober
 
 
+
+// when the user first sees the calendar,
+// the person sees the week that day are in.
 
 
 
 
 
-  const STATE = {
 
 
-      userOrder:{},
-      currentObjectId:{}
+const STATE = {
 
-  };
+
+    userOrder: {},
+    currentObjectId: {}
+
+};
 
 class Order {
 
-    postOrder(dish,currentSelectedDay) {
+    postOrder(dish, currentSelectedDay) {
 
-      var orderData= {
-        dayInfo: currentSelectedDay,
-        dish:dish,
-        dateId: currentSelectedDay.dateId
-      };
+        var orderData = {
+            date: currentSelectedDay.date,
+            dish: dish,
+            dateId:currentSelectedDay.dateId,
+            price:dish.price
+        };
 
         var ajax = $.ajax('/order', {
             type: 'POST',
@@ -68,11 +69,11 @@ class Order {
 
             success: function(data) {
 
-                 STATE.userOrder[data._id]=data;
-                 console.log('here is the data back:');
-                 console.log(STATE.userOrder);
-                 console.log(STATE.userOrder[data._id]._id);
-                 currentObjectId=STATE.userOrder[data._id]._id;
+                STATE.userOrder[data._id] = data;
+                console.log('here is the data back:');
+                console.log(STATE.userOrder);
+                console.log(STATE.userOrder[data._id]._id);
+                currentObjectId = STATE.userOrder[data._id]._id;
             },
             error: function(error) {
                 console.log(error);
@@ -91,9 +92,9 @@ class Order {
     updateOrder(days, id) {
 
         var updatingOrder = {
-             week:{
-               days:days
-             },
+            week: {
+                days: days
+            },
             _id: id
         };
 
@@ -127,40 +128,55 @@ class Order {
 
 class View {
 
-  renderDay(dayObject){
+    findDishes(dayObject){
 
-  var mS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-
-  var wS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      $.get( "order/"+date, function( data ) {
 
 
 
-  if(dayObject.day==thisDay ){
+});
 
-    $('.calendardiv ul').append('<li style="color:red "id='+dayObject.dateId+'>'+wS[dayObject.weekday]+'      '+mS[dayObject.month]+ '   ' +dayObject.day+ '</li>');
-  }
- else {
-     $('.calendardiv ul').append('<li id='+dayObject.dateId+'>'+wS[dayObject.weekday]+'      '+mS[dayObject.month]+ '   ' +dayObject.day+ '</li>');
- }
+    }
+
+    renderDay(dayObject) {
+
+        var mS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+
+         var wS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 
-  }
+        if (dayObject.day == thisDay) {
 
-    getCurrentArray(id){
+            $('.calendardiv ul').append('<div class="render-food-list"><li style="color:red "id=' + dayObject.dateId + '>' + wS[dayObject.weekday] + '   </br>    ' + mS[dayObject.month] + ' </br>  ' + dayObject.day +'</li>'+'</div>');
+        } else {
+            $('.calendardiv ul').append('<div class="render-food-list"><li id=' + dayObject.dateId + '>' + wS[dayObject.weekday]  + '   </br>   ' + mS[dayObject.month] + '   </br>  ' + dayObject.day + '</li>'+'</div>');
+        }
 
-              var ajax = $.ajax('/order/'+id, {
 
-                  type: 'GET',
+    }
 
-                  success: function(data) {
-                      console.log(data);
-                      console.log('DISPLAYING CURRENTARRAY');
-                  },
+    getCurrentDishes(dayObject) {
 
-                  error: function(error) {
-                      console.log(error);
-                  }
-              });
+        console.log(dayObject);
+
+        var dateId= dayObject;
+
+        var ajax = $.ajax('/order/'+dateId, {
+
+            type: 'GET',
+
+            success: function(data) {
+
+                console.log(data);
+                console.log(data.dishes);
+                console.log('DISPLAYING CURRENTARRAY');
+
+            },
+
+            error: function(error) {
+                console.log(error);
+            }
+        });
 
     }
 
@@ -252,47 +268,55 @@ $(document).ready(function() {
 
     var newOrder = new Order();
     var newView = new View();
-  var appUser = new User();
-  var dishId;
-  var currentDay;
-  var i;
+    var appUser = new User();
+    var dishId;
+    var currentDay;
+    var i;
 
-  // renders the calendar//
-  //
+    // renders the calendar//
+    //
 
 
-    for (i=0 ; i< 7 ; i++) {
-        testingDate.setDate(testingDate.getDate() + 1 );
+    for (i = 0; i < 7; i++) {
+
+        testingDate.setDate(testingDate.getDate() + 1);
+
+          console.log(testingDate);
 
         var dayObject = {
-        		day:testingDate.getDate(),
-            weekday:testingDate.getDay(),
-            month:testingDate.getMonth(),
-            year:testingDate.getFullYear(),
-      dateId:testingDate.getDate()+''+testingDate.getMonth()+''+testingDate.getFullYear()
-    };
 
+            date:new Date(testingDate.getFullYear(), testingDate.getMonth(),testingDate.getDate()),
+            day: testingDate.getDate(),
+            weekday: testingDate.getDay(),
+            month: testingDate.getMonth(),
+            year: testingDate.getFullYear(),
+            dateId: testingDate.getDate() + '' + testingDate.getMonth() + '' + testingDate.getFullYear()
+        };
+
+          newView.getCurrentDishes(dayObject.dateId);
         renderingWeekArray.push(dayObject);
-
         newView.renderDay(dayObject, i);
     }
 
 
 
-// on click of days return a selectedDay
+    // on click of days return a selectedDay
 
-      $('.calendardiv ul').on('click', 'li', function(){
-          console.log(renderingWeekArray);
-    console.log(  this.id );
-      for (i=0 ; i< renderingWeekArray.length ; i++) {
-              if(this.id==renderingWeekArray[i].dateId){
+    $('.calendardiv').on('click', 'li', function() {
 
-                  currentSelectedDay= renderingWeekArray[i];
-                  console.log(currentSelectedDay);
-              }
-      }
+        console.log(renderingWeekArray);
+        console.log(this.id);
 
-      });
+        for (i = 0; i < renderingWeekArray.length; i++) {
+
+            if (this.id == renderingWeekArray[i].dateId) {
+                currentSelectedDay = renderingWeekArray[i];
+                console.log(currentSelectedDay);
+
+            }
+        }
+
+    });
 
     $.get('/dishes', (data) => { //  data is the json data responded //
 
@@ -387,7 +411,6 @@ $(document).ready(function() {
 
         currentDay = this.id;
 
-
     });
 
 
@@ -400,28 +423,8 @@ $(document).ready(function() {
 
         var dish = newView.clickDish(i, selectedDish);
 
-
         console.log(dish);
-
-
-        if ( currentObjectId ===null ) {
-
-            console.log(dish);
-            newOrder.postOrder( dish , currentSelectedDay);
-
-        } else {
-            console.log(STATE.userOrder);
-              console.log('NODDASDSA');
-            console.log('Updating....');
-            newView.addDish(currentDay, dish);
-            // newOrder.postOrder(weekArray[currentDay].week, week[currentDay] );
-            newOrder.updateOrder(weekArray, currentObjectId);
-            // console.log(currentObjectId);
-            // newView.getCurrentArray(currentObjectId);
-        }
-
-
-
+        newOrder.postOrder(dish, currentSelectedDay);
     });
 
     // Adding or subtracting count

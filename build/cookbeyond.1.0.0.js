@@ -111,9 +111,10 @@
 	        value: function postOrder(dish, currentSelectedDay) {
 	
 	            var orderData = {
-	                dayInfo: currentSelectedDay,
+	                date: currentSelectedDay.date,
 	                dish: dish,
-	                dateId: currentSelectedDay.dateId
+	                dateId: currentSelectedDay.dateId,
+	                price: dish.price
 	            };
 	
 	            var ajax = $.ajax('/order', {
@@ -187,6 +188,12 @@
 	    }
 	
 	    _createClass(View, [{
+	        key: 'findDishes',
+	        value: function findDishes(dayObject) {
+	
+	            $.get("order/" + date, function (data) {});
+	        }
+	    }, {
 	        key: 'renderDay',
 	        value: function renderDay(dayObject) {
 	
@@ -196,21 +203,27 @@
 	
 	            if (dayObject.day == thisDay) {
 	
-	                $('.calendardiv ul').append('<li style="color:red "id=' + dayObject.dateId + '>' + wS[dayObject.weekday] + '      ' + mS[dayObject.month] + '   ' + dayObject.day + '</li>');
+	                $('.calendardiv ul').append('<div class="render-food-list"><li style="color:red "id=' + dayObject.dateId + '>' + wS[dayObject.weekday] + '   </br>    ' + mS[dayObject.month] + ' </br>  ' + dayObject.day + '</li>' + '</div>');
 	            } else {
-	                $('.calendardiv ul').append('<li id=' + dayObject.dateId + '>' + wS[dayObject.weekday] + '      ' + mS[dayObject.month] + '   ' + dayObject.day + '</li>');
+	                $('.calendardiv ul').append('<div class="render-food-list"><li id=' + dayObject.dateId + '>' + wS[dayObject.weekday] + '   </br>   ' + mS[dayObject.month] + '   </br>  ' + dayObject.day + '</li>' + '</div>');
 	            }
 	        }
 	    }, {
-	        key: 'getCurrentArray',
-	        value: function getCurrentArray(id) {
+	        key: 'getCurrentDishes',
+	        value: function getCurrentDishes(dayObject) {
 	
-	            var ajax = $.ajax('/order/' + id, {
+	            console.log(dayObject);
+	
+	            var dateId = dayObject;
+	
+	            var ajax = $.ajax('/order/' + dateId, {
 	
 	                type: 'GET',
 	
 	                success: function success(data) {
+	
 	                    console.log(data);
+	                    console.log(data.dishes);
 	                    console.log('DISPLAYING CURRENTARRAY');
 	                },
 	
@@ -317,9 +330,14 @@
 	
 	
 	    for (i = 0; i < 7; i++) {
+	
 	        testingDate.setDate(testingDate.getDate() + 1);
 	
+	        console.log(testingDate);
+	
 	        var dayObject = {
+	
+	            date: new Date(testingDate.getFullYear(), testingDate.getMonth(), testingDate.getDate()),
 	            day: testingDate.getDate(),
 	            weekday: testingDate.getDay(),
 	            month: testingDate.getMonth(),
@@ -327,19 +345,21 @@
 	            dateId: testingDate.getDate() + '' + testingDate.getMonth() + '' + testingDate.getFullYear()
 	        };
 	
+	        newView.getCurrentDishes(dayObject.dateId);
 	        renderingWeekArray.push(dayObject);
-	
 	        newView.renderDay(dayObject, i);
 	    }
 	
 	    // on click of days return a selectedDay
 	
-	    $('.calendardiv ul').on('click', 'li', function () {
+	    $('.calendardiv').on('click', 'li', function () {
+	
 	        console.log(renderingWeekArray);
 	        console.log(this.id);
-	        for (i = 0; i < renderingWeekArray.length; i++) {
-	            if (this.id == renderingWeekArray[i].dateId) {
 	
+	        for (i = 0; i < renderingWeekArray.length; i++) {
+	
+	            if (this.id == renderingWeekArray[i].dateId) {
 	                currentSelectedDay = renderingWeekArray[i];
 	                console.log(currentSelectedDay);
 	            }
@@ -429,21 +449,7 @@
 	        var dish = newView.clickDish(i, selectedDish);
 	
 	        console.log(dish);
-	
-	        if (currentObjectId === null) {
-	
-	            console.log(dish);
-	            newOrder.postOrder(dish, currentSelectedDay);
-	        } else {
-	            console.log(STATE.userOrder);
-	            console.log('NODDASDSA');
-	            console.log('Updating....');
-	            newView.addDish(currentDay, dish);
-	            // newOrder.postOrder(weekArray[currentDay].week, week[currentDay] );
-	            newOrder.updateOrder(weekArray, currentObjectId);
-	            // console.log(currentObjectId);
-	            // newView.getCurrentArray(currentObjectId);
-	        }
+	        newOrder.postOrder(dish, currentSelectedDay);
 	    });
 	
 	    // Adding or subtracting count

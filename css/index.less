@@ -1,6 +1,4 @@
 @import (inline) "../node_modules/bootstrap/dist/css/bootstrap.css";
-
-
 @white: #f0f8f3;
 @white2: #EFF0F1;
 @green1: #5dbb70;
@@ -8,16 +6,13 @@
 @nav-font: 'Josefin Sans', sans-serif;
 @font1: 'Rubik', sans-serif;
 @font2: 'Bitter', serif;
-
-@light-black: #262626;
-// @white: #f4f2fc;
+@light-black: #262626; // @white: #f4f2fc;
 // @green: #4CAF50;
 @pink: #FF6D6D;
-@orange:#ff7733;
+@orange: #ff7733;
 @green: #4CAF50;
 @light-green: #66ffb3;
-@baloo: 'Baloo Da', cursive;
-// @font1:'Fredoka One', cursive;
+@baloo: 'Baloo Da', cursive; // @font1:'Fredoka One', cursive;
 // @font2: 'Droid Sans', sans-serif;
 @font3: 'Raleway', sans-serif;
 @font4: 'Work Sans', sans-serif;
@@ -28,23 +23,27 @@
 @font9: 'Nunito', sans-serif;
 @blue: #7599d1;
 
-a{
-   text-decoration: none;
-   a:visited{
-     text-decoration: none;
-   }
+a {
+    text-decoration: none;
+
+    a:visited {
+        text-decoration: none;
+    }
 }
 
-li{list-style: none;}
+li {
+    list-style: none;
+}
+
 .weekslot {
     margin: 5px;
-    float:left;
+    float: left;
     border: solid 2px #79d2a4;
     border-radius: 4px;
     width: 130px;
     height: 120px;
-
 }
+
 .centralize {
     margin-left: auto;
     margin-right: auto;
@@ -62,43 +61,40 @@ body {
     max-width: 100%;
     box-sizing: border-box;
 }
-
 // extra for order2.html - BEGIN
-
 .calendardiv {
+    li {
+        border-right: 1px solid black;
+        font-size: 20px;
+        font-family: @font1;
+        height: 100px;
+        width: 100px;
+        text-align: center;
+    }
 
-    li{
-      border: 1px solid black;
-      border-radius: 4px;
-      font-size: 20px;
-      font-family:@font1;
-      padding: 10px;
-       }
+    .render-food-list {
+        margin-top: 20px;
+        border: 1px solid black;
+        border-radius: 4px;
+        height: 100px;
+    }
 }
-
-
 // extra for order2.html - END
-
 .header {
-
     height: 70px;
-
     background-color: @green;
     margin: 0;
     padding: 0;
 
-    p{
-       text-align: center;
-
+    p {
+        text-align: center;
     }
-    i{
-   display: inline;
-   float:left;
+
+    i {
+        display: inline;
+        float: left;
         font-size: 30px;
-        color:white;
-
-
-
+        color: white;
     }
 }
 
@@ -185,280 +181,250 @@ body {
     }
 }
 
-   #arrow-left {
+#arrow-left {
     //  background-color: yellow;
-       font-size: 40px;
-       margin-top: 40px;
-        padding-right: 5px;
-     .fa .fa-chevron-circle-left{
+    font-size: 40px;
+    margin-top: 40px;
+    padding-right: 5px;
 
-     }
-       float:left;
+    .fa .fa-chevron-circle-left {}
+    float: left;
+}
 
-   }
-
-
-  #arrow-right {
+#arrow-right {
     // background-color: yellow;
-     width: 50px;
-       font-size: 40px;
-       margin-top: 40px;
-       float:right;
-    .fa .fa-chevron-circle-right{
-    }
+    width: 50px;
+    font-size: 40px;
+    margin-top: 40px;
+    float: right;
 
-  }
-
-
+    .fa .fa-chevron-circle-right {}
+}
 
 .weekdiv {
-
     height: 150px;
     width: 1100px;
     .centralize;
     // padding-left:30px;
     // background-color: red;
-
-    p{
-      margin-top: 50px;
-      font-size: 20px;
-      font-family: @font2;
-      text-align: center;
+    p {
+        margin-top: 50px;
+        font-size: 20px;
+        font-family: @font2;
+        text-align: center;
     }
 
     .weekslot {
         margin: 5px;
-        float:left;
+        float: left;
         border: solid 2px #79d2a4;
         border-radius: 4px;
         width: 130px;
         height: 120px;
-
     }
 }
 
-.food-div{
-  padding-left: 70px;
-  width: 800px;
-  height: 200px;
-  .centralize;
+.food-div {
+    padding-left: 70px;
+    width: 800px;
+    height: 200px;
+    .centralize;
 
-.foodslot{
+    .foodslot {
+        float: left;
 
-  float:left;
-  label{
+        label {
+            margin-left: 10px;
+            color: black;
+            font-family: @font2;
+            text-align: center;
+        }
+    }
 
-    margin-left: 10px;
-    color:black;
-    font-family: @font2;
-    text-align: center;
-
-  }
+    .foodimage {
+        .weekslot;
+        float: none;
+    }
 }
-
-
-
- .foodimage{
-
-
-
-  .weekslot;
-  float:none;
- }
-
-
-}
-
 
 .dayform {
-  color:black;
-  .centralize;
-  font-family: @font2;
-   display: none;
-  border: solid 2px @green;
-  height: 400px;
-  width: 800px;
-  div{
-      display: inline;
-  }
-  h2{
-    text-align: center;
-    font-size: 20px; }
+    color: black;
+    .centralize;
+    font-family: @font2;
+    display: none;
+    border: solid 2px @green;
+    height: 400px;
+    width: 800px;
 
-    p{
-      display: inline;
-      margin-left: 100px;
-      color:blue;
+    div {
+        display: inline;
     }
 
-    li{
-      margin-right: 100px;
-      margin-left: 80px;
+    h2 {
+        text-align: center;
+        font-size: 20px;
     }
-  h1{
-    text-align: center;
-    font-size: 25px;
-    font-family: @font2;}
-  select{
-    margin-right: 80px;
-  }
+
+    p {
+        display: inline;
+        margin-left: 100px;
+        color: blue;
+    }
+
+    li {
+        margin-right: 100px;
+        margin-left: 80px;
+    }
+
+    h1 {
+        text-align: center;
+        font-size: 25px;
+        font-family: @font2;
+    }
+
+    select {
+        margin-right: 80px;
+    }
 }
-
 // sign in
 //
+
 button {
-  width:200px;
-  height:50px;
-  background-color: @green;
-  display: block;
-  .centralize;
-  margin-top: 50px;
-
+    width: 200px;
+    height: 50px;
+    background-color: @green;
+    display: block;
+    .centralize;
+    margin-top: 50px;
 }
-
 
 #login-email-input {
-  width: 300px;
-  .centralize;
+    width: 300px;
+    .centralize;
 }
- #login-password-input {
-  width: 300px;
-  .centralize;
+
+#login-password-input {
+    width: 300px;
+    .centralize;
 }
 
 .sign-in {
-  font-family: @font4;
-  font-size: 25px;
-  background-color: @white;
-  width: 600px;
-  height: 550px;
-  .centralize;
-  border:3px solid @pink;
-  border-radius: 5px;
-  color:@light-black;
-  padding: 30px;
-  margin-top:50px;
-
-
-  label{
-    text-align: center;
-    font-family: @baloo;
-  }
-
-  h4{
-    text-align: center;
-
-  }
-
-  input{
-    display: block;
-
+    font-family: @font4;
+    font-size: 25px;
+    background-color: @white;
+    width: 600px;
+    height: 550px;
     .centralize;
-    width: 300px;
-    height: 35px;
-    font-size: 20px;
-    margin-bottom:0px;
-    padding-top:1px;
+    border: 3px solid @pink;
     border-radius: 5px;
-    border: 1px solid @pink;
-    margin-top:0px;
-  }
-  button {
-    display: block;
-    .centralize;
-    width: 300px;
-    height:60px;
-    background-color: @pink;
-    border: 0px;
-    border-radius: 5px;
-    font-family:@baloo;
-    font-size: 20px;
-    color:white;
+    color: @light-black;
+    padding: 30px;
+    margin-top: 50px;
 
-  }
-
-
-  #giva-login-button {
-
-    background-color: @blue;
-    margin-top: 30px;
-  }
-
-  #guest-login-button {
-
-    background-color: @pink;
-    margin-top: 30px;
-  }
-
-
-
-
-  h2 {
-    font-size: 15px;
-    text-align: center;
-  }
-
-  a{
-    text-decoration: none;
-    color:@pink;
-
-    &:visited {
-      color:@pink;
+    label {
+        text-align: center;
+        font-family: @baloo;
     }
-  }
-}
 
+    h4 {
+        text-align: center;
+    }
+
+    input {
+        display: block;
+        .centralize;
+        width: 300px;
+        height: 35px;
+        font-size: 20px;
+        margin-bottom: 0;
+        padding-top: 1px;
+        border-radius: 5px;
+        border: 1px solid @pink;
+        margin-top: 0;
+    }
+
+    button {
+        display: block;
+        .centralize;
+        width: 300px;
+        height: 60px;
+        background-color: @pink;
+        border: 0;
+        border-radius: 5px;
+        font-family: @baloo;
+        font-size: 20px;
+        color: white;
+    }
+
+    #giva-login-button {
+        background-color: @blue;
+        margin-top: 30px;
+    }
+
+    #guest-login-button {
+        background-color: @pink;
+        margin-top: 30px;
+    }
+
+    h2 {
+        font-size: 15px;
+        text-align: center;
+    }
+
+    a {
+        text-decoration: none;
+        color: @pink;
+
+        &:visited {
+            color: @pink;
+        }
+    }
+}
 // sign up
 //
 
 .sign-up {
-  .sign-in;
-  height: 500px;
+    .sign-in;
+    height: 500px;
 
-  .form-container{
-    .centralize;
-    width:400px;
-    margin-top: 30px;
+    .form-container {
+        .centralize;
+        width: 400px;
+        margin-top: 30px;
         margin-bottom: 50px;
-  }
+    }
 
-.alert  {
-   height: 30px;
-   width:300px;
-   .centralize;
-   font-size:15px;
+    .alert {
+        height: 30px;
+        width: 300px;
+        .centralize;
+        font-size: 15px;
+    }
 
-
-}
-
-  h3 {
-   //  width: 150px;
+    h3 {
+        //  width: 150px;
         display: inline;
         font-size: 25px;
-  }
+    }
 
+    #signup-button {
+        #giva-login-button;
+        background-color: @green;
+    }
 
+    #label-container {
+        width: 300px;
+        .centralize;
+    }
 
-  #signup-button{
-    #giva-login-button;
-    background-color: @green;
-  }
+    h4 {
+        text-align: left;
+        // width: 150px;
+        display: inline;
+    }
 
-  #label-container {
-     width:300px;
-     .centralize;
-
-  }
-
-  h4 {
-   text-align: left;
-   // width: 150px;
-       display: inline;
-  }
-
-  input {
-    display: block;
-
-    .centralize;
-  }
+    input {
+        display: block;
+        .centralize;
+    }
 }

@@ -270,15 +270,13 @@ app.get('/', function(req, res) {
 
 //   ENDPOINT FOR HANDLING DISHES
 //
-app.get('/order/:dateid', function(req, res) {
-
-    var dateId = req.params.dateid;
+app.get('/order/:dateId', function(req, res) {
+    console.log(req.params);
+    var dateId= req.params.dateId;
 
     Order.find({
-
             user: req.user._id,
-            dateId: dateId
-
+            dateId:dateId
         },
 
         function(err, data) {
@@ -287,7 +285,7 @@ app.get('/order/:dateid', function(req, res) {
             // show the one user
             res.json(data);
             console.log('found one DISH ARRAY:');
-            console.log(data);
+
 
         });
 
@@ -300,6 +298,7 @@ app.put('/order', isLoggedIn, function(req, res) {
     console.log(req.body);
 
     var id = req.body._id;
+
 
 
     Order.findById(id, function(err, foundArray) {
@@ -335,11 +334,12 @@ app.post('/order', function(req, res) {
 
     var dish = req.body.dish;
     var date = req.body.date;
+    var dateId= req.body.dateId;
 
     var query = {
         user: req.user._id,
-        date: req.body.date
-
+        date: req.body.date,
+        dateId:req.body.dateId
     };
 
     var update = {

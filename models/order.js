@@ -10,7 +10,9 @@ var OrderSchema = new mongoose.Schema({
     date: {
         type:Date
     },
-
+   dateId: {
+     type:Number
+   },
     dishes:[
       {
 
@@ -20,9 +22,6 @@ var OrderSchema = new mongoose.Schema({
       }
     ],
 
- dateId: {
-   type:String
- },
  total:{
    type:Number
  }
