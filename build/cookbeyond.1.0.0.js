@@ -97,7 +97,7 @@
 	var STATE = {
 	
 	    userOrder: {},
-	    currentObjectId: {}
+	    orderObject: {}
 	
 	};
 	
@@ -180,7 +180,40 @@
 	//
 	//
 	//
+	//
+	//
 	
+	function renderDishes(dayObject, orderObject) {
+	
+	    if (orderObject.length === 0) {
+	        return;
+	    } else {
+	
+	        console.log(orderObject[0].dishes);
+	
+	        for (i = 0; i < orderObject[0].dishes.length; i++) {
+	
+	            $('#' + dayObject.dateId + '').append('<div class="insidediv"><img src=' + orderObject[0].dishes[i].dish.imageURL + '></img>' + '<p>' + orderObject[0].dishes[i].dish.name + '</p></div>');
+	        }
+	    }
+	}
+	
+	function renderDays(dayObject, orderObject) {
+	
+	    var mS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+	
+	    var wS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+	
+	    if (dayObject.day == thisDay) {
+	
+	        $('.calendardiv ul').append('<div class="render-food-list" style="color:red" id=' + dayObject.dateId + '>  <div class="datesdiv" id=' + dayObject.dateId + '>' + wS[dayObject.weekday] + '</br>' + mS[dayObject.month] + '</br>' + dayObject.day + '</br></div></div> ');
+	    } else {
+	
+	        $('.calendardiv ul').append('<div class="render-food-list" id=' + dayObject.dateId + '> <div class="datesdiv "id=' + dayObject.dateId + '>' + wS[dayObject.weekday] + '</br>' + mS[dayObject.month] + '</br>' + dayObject.day + '</br></div></div>');
+	    }
+	
+	    renderDishes(dayObject, orderObject);
+	}
 	
 	var View = function () {
 	    function View() {
@@ -195,26 +228,21 @@
 	        }
 	    }, {
 	        key: 'renderDay',
-	        value: function renderDay(dayObject) {
+	        value: function renderDay(dayObject, orderObject) {
 	
 	            var mS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 	
 	            var wS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 	
-	            if (dayObject.day == thisDay) {
-	
-	                $('.calendardiv ul').append('<div class="render-food-list"><li style="color:red "id=' + dayObject.dateId + '>' + wS[dayObject.weekday] + '   </br>    ' + mS[dayObject.month] + ' </br>  ' + dayObject.day + '</li>' + '</div>');
-	            } else {
-	                $('.calendardiv ul').append('<div class="render-food-list"><li id=' + dayObject.dateId + '>' + wS[dayObject.weekday] + '   </br>   ' + mS[dayObject.month] + '   </br>  ' + dayObject.day + '</li>' + '</div>');
-	            }
+	            $('.render-food-list').append('<div class="insidediv"></div>');
 	        }
 	    }, {
 	        key: 'getCurrentDishes',
-	        value: function getCurrentDishes(dayObject) {
+	        value: function getCurrentDishes(dayObject, dayObjectId) {
 	
-	            console.log(dayObject);
+	            console.log(dayObjectId);
 	
-	            var dateId = dayObject;
+	            var dateId = dayObjectId;
 	
 	            var ajax = $.ajax('/order/' + dateId, {
 	
@@ -222,9 +250,7 @@
 	
 	                success: function success(data) {
 	
-	                    console.log(data);
-	                    console.log(data.dishes);
-	                    console.log('DISPLAYING CURRENTARRAY');
+	                    renderDays(dayObject, data);
 	                },
 	
 	                error: function error(_error3) {
@@ -327,32 +353,45 @@
 	
 	    // renders the calendar//
 	    //
+	    //
+	    //
+	    $.get('/dishes', function (data) {
+	        //  data is the json data responded //
 	
 	
-	    for (i = 0; i < 7; i++) {
+	        dishesArray = data;
+	        optionView();
+	    });
 	
-	        testingDate.setDate(testingDate.getDate() + 1);
+	    renderCalendar();
 	
-	        console.log(testingDate);
+	    function renderCalendar() {
 	
-	        var dayObject = {
+	        for (i = 0; i < 7; i++) {
 	
-	            date: new Date(testingDate.getFullYear(), testingDate.getMonth(), testingDate.getDate()),
-	            day: testingDate.getDate(),
-	            weekday: testingDate.getDay(),
-	            month: testingDate.getMonth(),
-	            year: testingDate.getFullYear(),
-	            dateId: testingDate.getDate() + '' + testingDate.getMonth() + '' + testingDate.getFullYear()
-	        };
+	            testingDate.setDate(testingDate.getDate() + 1);
 	
-	        newView.getCurrentDishes(dayObject.dateId);
-	        renderingWeekArray.push(dayObject);
-	        newView.renderDay(dayObject, i);
+	            console.log(testingDate);
+	            var dayObject = {
+	
+	                date: new Date(testingDate.getFullYear(), testingDate.getMonth(), testingDate.getDate()),
+	                day: testingDate.getDate(),
+	                weekday: testingDate.getDay(),
+	                month: testingDate.getMonth(),
+	                year: testingDate.getFullYear(),
+	                dateId: testingDate.getDate() + '' + testingDate.getMonth() + '' + testingDate.getFullYear()
+	            };
+	
+	            newView.getCurrentDishes(dayObject, dayObject.dateId);
+	            renderingWeekArray.push(dayObject);
+	            // console.log(STATE.orderArray);
+	            // newView.renderDay(dayObject , STATE.orderArray);
+	        }
 	    }
 	
 	    // on click of days return a selectedDay
 	
-	    $('.calendardiv').on('click', 'li', function () {
+	    $('.calendardiv').on('click', '.datesdiv', function () {
 	
 	        console.log(renderingWeekArray);
 	        console.log(this.id);
@@ -366,12 +405,21 @@
 	        }
 	    });
 	
-	    $.get('/dishes', function (data) {
-	        //  data is the json data responded //
+	    //ADD DISHES BY CLIKCING //
 	
-	        console.log(data);
-	        dishesArray = data;
-	        optionView();
+	
+	    $('.food-div').on('click', '.foodslot', function () {
+	
+	        var i = 0;
+	        var selectedDish = $(this)[0].id;
+	
+	        var dish = newView.clickDish(i, selectedDish);
+	
+	        console.log(dish);
+	        newOrder.postOrder(dish, currentSelectedDay);
+	        console.log(currentSelectedDay);
+	
+	        $('#' + currentSelectedDay.dateId + '').append('<div class="insidediv"><img src=' + dish.imageURL + '></img>' + '<p>' + dish.name + '</p></div>');
 	    });
 	
 	    function optionView() {
@@ -439,17 +487,6 @@
 	        $('.dayform').show();
 	
 	        currentDay = this.id;
-	    });
-	
-	    $('.food-div').on('click', '.foodslot', function () {
-	
-	        var i = 0;
-	        var selectedDish = $(this)[0].id;
-	
-	        var dish = newView.clickDish(i, selectedDish);
-	
-	        console.log(dish);
-	        newOrder.postOrder(dish, currentSelectedDay);
 	    });
 	
 	    // Adding or subtracting count

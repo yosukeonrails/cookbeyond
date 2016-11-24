@@ -6788,19 +6788,36 @@ body {
   max-width: 100%;
   box-sizing: border-box;
 }
-.calendardiv li {
-  border-right: 1px solid black;
+.calendardiv .datesdiv {
+  border: 1px solid black;
   font-size: 20px;
   font-family: 'Rubik', sans-serif;
-  height: 100px;
+  height: 125px;
   width: 100px;
   text-align: center;
+  float: left;
 }
 .calendardiv .render-food-list {
-  margin-top: 20px;
   border: 1px solid black;
   border-radius: 4px;
-  height: 100px;
+  height: 125px;
+  width: 1300px;
+}
+.calendardiv .insidediv {
+  width: 150px;
+  height: 125px;
+  padding-top: 10px;
+  float: left;
+}
+.calendardiv .insidediv p {
+  text-align: center;
+}
+.calendardiv .insidediv img {
+  width: 80px;
+  height: 80px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 .header {
   height: 70px;
