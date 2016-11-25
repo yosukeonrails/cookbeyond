@@ -270,7 +270,7 @@ app.get('/', function(req, res) {
 
 //   ENDPOINT FOR HANDLING DISHES
 //
-app.get('/order/:dateId', function(req, res) {
+app.get('/order/date/:dateId', function(req, res) {
     console.log(req.params);
     var dateId= req.params.dateId;
 
@@ -291,6 +291,8 @@ app.get('/order/:dateId', function(req, res) {
 
 
 });
+
+
 
 
 app.put('/order', isLoggedIn, function(req, res) {
@@ -330,6 +332,7 @@ app.put('/order', isLoggedIn, function(req, res) {
 
 });
 
+
 app.post('/order', function(req, res) {
 
     var dish = req.body.dish;
@@ -367,6 +370,36 @@ app.post('/order', function(req, res) {
     });
 
 });
+
+
+////////delletee///////
+
+
+app.delete('/order', function(req, res) {
+
+    var query = {
+        user: req.user._id,
+        _id: req.body.id
+    };
+
+    var update = {
+
+        $pull: {dishes: {_id: req.body.dishId} }, $inc: { total: - req.body.price
+
+        }
+    };
+
+  Order.findOneAndUpdate(query, update, function(err, data) {
+        console.log('error is ');
+        console.log(err);
+
+        res.status(201).json(data);
+
+    });
+
+});
+
+
 
 
 

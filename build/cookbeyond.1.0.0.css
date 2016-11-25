@@ -6756,6 +6756,91 @@ button.close {
 }
 /*# sourceMappingURL=bootstrap.css.map */
 
+html {
+  margin: 0;
+  padding: 0;
+}
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f0f8f3;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.cookbeyond-nav {
+  max-width: 100%;
+  height: 60px;
+  background-color: #4CAF50;
+  color: white;
+}
+.cookbeyond-nav .center-logo {
+  width: 200px;
+  height: 70px;
+  float: left;
+  font-size: 30px;
+  font-family: 'Cabin', sans-serif;
+  color: white;
+  text-shadow: 1px 2px black;
+  padding: 10px;
+}
+.cookbeyond-nav .center-logo li {
+  text-align: center;
+}
+.cookbeyond-nav .user-navbar {
+  width: 140px;
+  height: 40px;
+  float: right;
+  font-size: 17px;
+  padding-top: 20px;
+}
+.cookbeyond-nav .user-navbar i {
+  color: #262626;
+  font-size: 17px;
+  margin-right: 10px;
+}
+.cookbeyond-nav .logout-navbar {
+  padding-left: 20px;
+  padding-top: 20px;
+  width: 120px;
+  height: 40px;
+  float: right;
+  font-size: 17px;
+}
+.cookbeyond-nav .logout-navbar i {
+  color: #262626;
+  font-size: 17px;
+}
+.main h1 {
+  font-size: 20px;
+  color: #262626;
+  font-family: 'Raleway', sans-serif;
+  text-align: center;
+}
+.header {
+  height: 70px;
+  background-color: #4CAF50;
+  margin: 0;
+  padding: 0;
+}
+.header .logo {
+  padding: 20px;
+}
+.header .logo p {
+  font-size: 30px;
+  font-family: 'Cabin', sans-serif;
+  margin: 0;
+  color: white;
+  text-shadow: 1px 2px black;
+}
+.header p {
+  text-align: center;
+}
+.header i {
+  display: inline;
+  float: left;
+  font-size: 30px;
+  color: white;
+}
 a {
   text-decoration: none;
 }
@@ -6781,30 +6866,24 @@ html {
   margin: 0;
   padding: 0;
 }
-body {
-  margin: 0;
-  padding: 0;
-  background-color: #f0f8f3;
-  max-width: 100%;
-  box-sizing: border-box;
-}
 .calendardiv .datesdiv {
   padding-top: 20px;
   border-right: 1px solid #737373;
   font-size: 22px;
   font-family: 'Rubik', sans-serif;
-  height: 125px;
+  height: 120px;
   width: 100px;
   text-align: center;
   float: left;
   color: white;
   background-color: #ff8080;
+  z-index: -1;
 }
 .calendardiv .render-food-list {
   margin-top: 20px;
   border: 1px solid #737373;
   border-radius: 4px;
-  height: 125px;
+  height: 122px;
   width: 1300px;
 }
 .calendardiv .insidediv {
@@ -6823,46 +6902,19 @@ body {
   width: 80px;
   height: 80px;
   display: block;
+  box-shadow: 4px 4px 2px #737373;
   margin-left: auto;
   margin-right: auto;
 }
-.header {
-  height: 70px;
-  background-color: #4CAF50;
-  margin: 0;
-  padding: 0;
-}
-.header p {
-  text-align: center;
-}
-.header i {
-  display: inline;
-  float: left;
-  font-size: 30px;
-  color: white;
-}
-.logo {
-  padding: 20px;
-}
-.logo p {
-  font-size: 30px;
-  font-family: 'Cabin', sans-serif;
-  margin: 0;
-  color: white;
-  text-shadow: 1px 2px black;
-}
 .navigation {
-  background-color: #f0f8f3;
   height: 80px;
-  width: 1000px;
-  padding-top: 30px;
+  width: 800px;
+  padding-top: 10px;
   margin-left: auto;
   margin-right: auto;
 }
 .navigation ul {
   width: 800px;
-  margin-left: auto;
-  margin-right: auto;
 }
 .navigation i {
   margin-left: 10px;
@@ -6871,7 +6923,7 @@ body {
   display: inline;
   color: black;
   font-family: 'Josefin Sans', sans-serif;
-  font-size: 25px;
+  font-size: 20px;
   margin-right: 10px;
 }
 .slider {

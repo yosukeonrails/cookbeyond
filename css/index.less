@@ -7,9 +7,8 @@
 @font1: 'Rubik', sans-serif;
 @font2: 'Bitter', serif;
 @light-black: #262626;
-@light-red:#ff8080;
-@dark-grey:#737373;
-// @white: #f4f2fc;
+@light-red: #ff8080;
+@dark-grey: #737373; // @white: #f4f2fc;
 // @green: #4CAF50;
 @pink: #FF6D6D;
 @orange: #ff7733;
@@ -24,7 +23,116 @@
 @font7: 'Hind', sans-serif;
 @font8: 'Cabin', sans-serif;
 @font9: 'Nunito', sans-serif;
-@blue: #7599d1;
+@blue: #7599d1; //////// NEW CSS ///////
+///'
+
+html {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: @white;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.cookbeyond-nav {
+    max-width: 100%;
+    height: 60px;
+    background-color: @green;
+    color:white;
+
+    .center-logo {
+        width: 200px;
+        height: 70px;
+        float: left;
+        font-size: 30px;
+        font-family: 'Cabin', sans-serif;
+        color: white;
+        text-shadow: 1px 2px black;
+    padding: 10px;
+        li {
+
+            text-align: center;
+        }
+    }
+
+    .user-navbar {
+        width: 140px;
+        height: 40px;
+        float: right;
+        font-size: 17px;
+        padding-top: 20px;
+
+
+        i {
+          color:@light-black;
+            font-size: 17px;
+            margin-right: 10px;
+        }
+    }
+
+    .logout-navbar {
+
+        padding-left: 20px;
+        padding-top: 20px;
+        width: 120px;
+        height: 40px;
+        float: right;
+        font-size: 17px;
+
+
+        i {
+          color:@light-black;
+            font-size: 17px;
+        }
+    }
+}
+
+.main{
+
+  h1{
+    font-size: 20px;
+    color:@light-black;
+    font-family: @font3;
+    text-align: center;
+  }
+}
+
+////////
+
+.header {
+    height: 70px;
+    background-color: @green;
+    margin: 0;
+    padding: 0;
+
+    .logo {
+        padding: 20px;
+
+        p {
+            font-size: 30px;
+            font-family: 'Cabin', sans-serif;
+            margin: 0;
+            color: white;
+            text-shadow: 1px 2px black;
+        }
+    }
+
+    p {
+        text-align: center;
+    }
+
+    i {
+        display: inline;
+        float: left;
+        font-size: 30px;
+        color: white;
+    }
+}
 
 a {
     text-decoration: none;
@@ -56,105 +164,64 @@ html {
     margin: 0;
     padding: 0;
 }
-
-body {
-    margin: 0;
-    padding: 0;
-    background-color: @white;
-    max-width: 100%;
-    box-sizing: border-box;
-}
 // extra for order2.html - BEGIN
+
 .calendardiv {
-
-
     .datesdiv {
-      padding-top: 20px;
+        padding-top: 20px;
         border-right: 1px solid @dark-grey;
         font-size: 22px;
         font-family: @font1;
-        height: 125px;
+        height: 120px;
         width: 100px;
         text-align: center;
         float: left;
-        color:white;
-        background-color:@light-red;
+        color: white;
+        background-color: @light-red;
+        z-index: -1;
     }
 
     .render-food-list {
-
         margin-top: 20px;
         border: 1px solid @dark-grey;
         border-radius: 4px;
-        height: 125px;
+        height: 122px;
         width: 1300px;
-
     }
 
+    .insidediv {
+        width: 150px;
+        height: 125px;
+        padding-top: 10px;
+        float: left;
+        font-family: @font3;
 
-        .insidediv{
-         width: 150px;
-          height: 125px;
-          padding-top: 10px;
-          float:left;
-          font-family: @font3;
-
-          p{
+        p {
             text-align: center;
-          }
-
-          img{
-            border-radius: 4px;
-            border: 1px solid black;
-            width:80px;
-            height: 80px;
-            display: block;
-            .centralize
-          }
         }
 
+        img {
+            border-radius: 4px;
+            border: 1px solid black;
+            width: 80px;
+            height: 80px;
+            display: block;
+            box-shadow: 4px 4px 2px @dark-grey;
+            .centralize;
+        }
+    }
 }
 // extra for order2.html - END
-.header {
-    height: 70px;
-    background-color: @green;
-    margin: 0;
-    padding: 0;
-
-    p {
-        text-align: center;
-    }
-
-    i {
-        display: inline;
-        float: left;
-        font-size: 30px;
-        color: white;
-    }
-}
-
-.logo {
-    padding: 20px;
-
-    p {
-        font-size: 30px;
-        font-family: 'Cabin', sans-serif;
-        margin: 0;
-        color: white;
-        text-shadow: 1px 2px black;
-    }
-}
 
 .navigation {
-    background-color: @white;
+
     height: 80px;
-    width: 1000px;
-    padding-top: 30px;
+    width: 800px;
+    padding-top: 10px;
     .centralize;
 
     ul {
         width: 800px;
-        .centralize;
     }
 
     i {
@@ -165,7 +232,7 @@ body {
         display: inline;
         color: black;
         font-family: @nav-font;
-        font-size: 25px;
+        font-size: 20px;
         margin-right: 10px;
     }
 }
