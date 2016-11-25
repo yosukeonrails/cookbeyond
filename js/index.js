@@ -78,15 +78,34 @@ class Order {
 
                 STATE.userOrder[data._id] = data;
 
-
-
+                var divId=(data.dishes.length-1);
+                console.log(divId);
                 var postedDish=data.dishes[data.dishes.length-1];
 
                 console.log('here is the data back:');
 
                 currentObjectId = STATE.userOrder[data._id]._id;
 
-      $('#' + data.dateId + '').append('<div class="insidediv" id='+postedDish._id+'><img src=' + postedDish.dish.imageURL + '></img>' + '<p>' +  postedDish.dish.name + '</p></div>');
+
+
+      var appended='<div class="insidediv" id='+divId+'><img src=' + postedDish.dish.imageURL + '></img>' + '<p>' +  postedDish.dish.name + '</p></div>';
+      appended= $(appended);
+
+      appended.click(  function(){
+        console.log(data);
+
+
+           var orderId=data._id;
+           var orderDishId= postedDish._id;
+           var orderPrice=postedDish.dish.price;
+
+
+           console.log(orderId); console.log(orderPrice); console.log(orderDishId);
+
+         deleteDish(orderId , orderDishId, orderPrice);
+      });
+
+       $('#' + currentSelectedDay.dateId + '').append(appended);
 
             },
             error: function(error) {
@@ -163,13 +182,13 @@ function renderCalendar(index){
 
 }
 
-  function deleteDish(orderObject, orderObjectId, orderObjectPrice){
+  function deleteDish(orderId, orderDishId, orderPrice){
 
         var deletedDish={
               // id:currentSelectedDay.dateId,
-             id:orderObject[0]._id,
-             dishId: orderObjectId,
-             price:orderObjectPrice
+             id:orderId,
+             dishId: orderDishId,
+             price:orderPrice
         };
 
             $.ajax('/order', {
@@ -207,20 +226,18 @@ function renderDishes(dayObject, orderObject) {
 
           div.click(  function(){
 
+            
+              var orderId=orderObject[0]._id;
+               var orderDishId= orderObject[0].dishes[this.id]._id;
+               var orderPrice=orderObject[0].dishes[this.id].dish.price;
 
-               var orderObjectId= orderObject[0].dishes[this.id]._id;
-               var orderObjectPrice=orderObject[0].dishes[this.id].dish.price;
 
-               console.log(orderObjectId); console.log(orderObjectPrice); console.log(orderObject[0]._id);
-               deleteDish(orderObject , orderObjectId, orderObjectPrice);
-
+             deleteDish(orderId, orderDishId , orderPrice);
 
           });
+
             $('#' + dayObject.dateId + '').append(div);
-
         }
-
-
     }
 
     index++;
