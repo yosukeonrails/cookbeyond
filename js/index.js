@@ -91,22 +91,28 @@ class Order {
       var appended='<div class="insidediv" id='+divId+'><img src=' + postedDish.dish.imageURL + '></img>' + '<p>' +  postedDish.dish.name + '</p></div>';
       appended= $(appended);
 
-      appended.click(  function(){
+      var deleteX= '<i class="fa fa-times-circle-o" id='+divId+' aria-hidden="true"></i>';
+      deleteX=$(deleteX);
+
+      deleteX.click(  function(){
         console.log(data);
 
-
+        appended.remove();
+        (deleteX).remove();
+        
            var orderId=data._id;
            var orderDishId= postedDish._id;
            var orderPrice=postedDish.dish.price;
 
 
-           console.log(orderId); console.log(orderPrice); console.log(orderDishId);
+          console.log(orderId); console.log(orderPrice); console.log(orderDishId);
 
          deleteDish(orderId , orderDishId, orderPrice);
+
       });
 
        $('#' + currentSelectedDay.dateId + '').append(appended);
-
+       $('#' + currentSelectedDay.dateId + '').append(deleteX);
             },
             error: function(error) {
                 console.log(error);
@@ -223,20 +229,24 @@ function renderDishes(dayObject, orderObject) {
 
           var div='<div class="insidediv" id='+i+' value='+i+'><img src=' + orderObject[0].dishes[i].dish.imageURL + '></img>' + '<p>' + orderObject[0].dishes[i].dish.name + '</p></div>';
           div= $(div);
+          var deleteX= '<i class="fa fa-times-circle-o" id='+i+' aria-hidden="true"></i>';
+          deleteX=$(deleteX);
 
-          div.click(  function(){
+          deleteX.click(  function(){
 
-            
+
               var orderId=orderObject[0]._id;
                var orderDishId= orderObject[0].dishes[this.id]._id;
                var orderPrice=orderObject[0].dishes[this.id].dish.price;
 
-
+              (div).remove();
+              (deleteX).remove();
              deleteDish(orderId, orderDishId , orderPrice);
 
           });
 
             $('#' + dayObject.dateId + '').append(div);
+              $('#' + dayObject.dateId + '').append(deleteX);
         }
     }
 

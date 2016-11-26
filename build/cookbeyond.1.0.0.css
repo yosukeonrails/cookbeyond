@@ -6886,6 +6886,10 @@ html {
   height: 122px;
   width: 1300px;
 }
+.calendardiv i {
+  float: left;
+  font-size: 18px;
+}
 .calendardiv .insidediv {
   width: 150px;
   height: 125px;
