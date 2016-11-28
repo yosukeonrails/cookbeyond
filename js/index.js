@@ -18,18 +18,18 @@ var thisYear = new Date().getFullYear();
 var thisMonth = new Date().getMonth();
 var thisDay = new Date().getDate();
 var thisWeekDay = new Date().getDay();
-var thisDayId= new Date().getDate() + '' +  new Date().getMonth() + '' +  new Date().getFullYear();
+var thisDayId = new Date().getDate() + '' + new Date().getMonth() + '' + new Date().getFullYear();
 var thisDayObject;
-var weekChanger = -1;
+
 var weekDays;
 var renderingWeekArray = [];
 var testingDate = new Date();
-var testingDay = new Date(2016, 10, 21).getDate();
 var testingWeekday = thisWeekDay;
+var weekChanger = -1;
 var currentSelectedDay = thisDayObject;
 var dishList = [];
-var index=0;
-  var deleteIndex;
+var index = 0;
+var deleteIndex;
 
 
 // 1 - 2 = 30 of OCtober
@@ -41,7 +41,37 @@ var index=0;
 
 
 
+function deleteDishView(postedDish, orderId, currentDay) {
 
+    var appended = '<div class="insidediv"><img src=' + postedDish.dish.imageURL + '></img>' + '<p>' + postedDish.dish.name + '</p></div>';
+    appended = $(appended);
+
+    var deleteX = '<i class="fa fa-times-circle-o"  aria-hidden="true"></i>';
+
+    deleteX = $(deleteX);
+    console.log(deleteX);
+
+    deleteX.click(function() {
+        console.log(data, appended, deleteX);
+
+        appended.remove();
+        (deleteX).remove();
+
+        var orderDishId = postedDish._id;
+        var orderPrice = postedDish.dish.price;
+
+        console.log(orderId);
+        console.log(orderPrice);
+        console.log(orderDishId);
+
+        deleteDish(orderId, orderDishId, orderPrice);
+
+    });
+
+    $('#' + currentDay + '').append(appended);
+    $('#' + currentDay + '').append(deleteX);
+
+}
 
 
 
@@ -50,7 +80,7 @@ const STATE = {
 
     userOrder: {},
     orderObject: {},
-    thisDayObject:{}
+    thisDayObject: {}
 
 
 };
@@ -79,41 +109,19 @@ class Order {
 
                 STATE.userOrder[data._id] = data;
 
-                var divId=(data.dishes.length-1);
+                var divId = (data.dishes.length - 1);
                 console.log(divId);
-                var postedDish=data.dishes[data.dishes.length-1];
+                var postedDish = data.dishes[data.dishes.length - 1];
+                var orderId = data._id;
 
                 console.log('here is the data back:');
 
                 currentObjectId = STATE.userOrder[data._id]._id;
+                var currentDay = currentSelectedDay.dateId;
+
+                deleteDishView(postedDish, orderId, currentDay);
 
 
-
-      var appended='<div class="insidediv" id='+divId+'><img src=' + postedDish.dish.imageURL + '></img>' + '<p>' +  postedDish.dish.name + '</p></div>';
-      appended= $(appended);
-
-      var deleteX= '<i class="fa fa-times-circle-o" id='+divId+' aria-hidden="true"></i>';
-      deleteX=$(deleteX);
-
-      deleteX.click(  function(){
-        console.log(data);
-
-        appended.remove();
-        (deleteX).remove();
-
-           var orderId=data._id;
-           var orderDishId= postedDish._id;
-           var orderPrice=postedDish.dish.price;
-
-
-          console.log(orderId); console.log(orderPrice); console.log(orderDishId);
-
-         deleteDish(orderId , orderDishId, orderPrice);
-
-      });
-
-       $('#' + currentSelectedDay.dateId + '').append(appended);
-       $('#' + currentSelectedDay.dateId + '').append(deleteX);
             },
             error: function(error) {
                 console.log(error);
@@ -125,99 +133,87 @@ class Order {
 }
 
 
-//
-//
-//
-//
-//
-//
-//
+
+function getCurrentDishes(dayObject, dayObjectId) {
+
+    console.log(dayObjectId);
+
+    var dateId = dayObjectId;
+
+    var ajax = $.ajax('/order/date/' + dateId, {
+
+        type: 'GET',
+
+        success: function(data) {
 
 
+            renderDays(dayObject, data);
+        },
 
-function  getCurrentDishes(dayObject, dayObjectId) {
-
-        console.log(dayObjectId);
-
-        var dateId = dayObjectId;
-
-        var ajax = $.ajax('/order/date/' + dateId, {
-
-            type: 'GET',
-
-            success: function(data) {
-
-                renderDays(dayObject, data);
-            },
-
-            error: function(error) {
-                console.log(error);
-            }
-        });
-    }
-
-
-function renderCalendar(index){
-
-  console.log(index);
-  if(index<7){
-
-    testingDate.setDate(testingDate.getDate() + 1);
-
-    console.log(testingDate);
-
-    var dayObject = {
-
-        date: new Date(testingDate.getFullYear(), testingDate.getMonth(), testingDate.getDate()),
-        day: testingDate.getDate(),
-        weekday: testingDate.getDay(),
-        month: testingDate.getMonth(),
-        year: testingDate.getFullYear(),
-        dateId: testingDate.getDate() + '' + testingDate.getMonth() + '' + testingDate.getFullYear()
-    };
-
-    getCurrentDishes(dayObject, dayObject.dateId);
-
-    renderingWeekArray.push(dayObject);
-
-    console.log(dayObject.dateId);
-    console.log(thisDayId);
-
-
-  }
-
-
+        error: function(error) {
+            console.log(error);
+        }
+    });
 }
 
-  function deleteDish(orderId, orderDishId, orderPrice){
 
-        var deletedDish={
-              // id:currentSelectedDay.dateId,
-             id:orderId,
-             dishId: orderDishId,
-             price:orderPrice
+function renderCalendar(index) {
+
+    console.log(index);
+
+    if (index < 7) {
+
+        testingDate.setDate(testingDate.getDate() + 1);
+
+        var dayObject = {
+            date: new Date(testingDate.getFullYear(), testingDate.getMonth(), testingDate.getDate()),
+            day: testingDate.getDate(),
+            weekday: testingDate.getDay(),
+            month: testingDate.getMonth(),
+            year: testingDate.getFullYear(),
+            dateId: testingDate.getDate() + '' + testingDate.getMonth() + '' + testingDate.getFullYear()
         };
 
-            $.ajax('/order', {
-            type: 'DELETE',
-            data: JSON.stringify(deletedDish),
-            dataType: 'json',
-            contentType: 'application/json',
+        getCurrentDishes(dayObject, dayObject.dateId);
 
-            success: function(data) {
+        renderingWeekArray.push(dayObject);
 
-            },
-            error: function(error) {
-                console.log(error);
-            }
-        });
+        console.log(dayObject.dateId);
+        console.log(thisDayId);
 
-  }
+    }
+
+
+}
+
+function deleteDish(orderId, orderDishId, orderPrice) {
+
+    var deletedDish = {
+        // id:currentSelectedDay.dateId,
+        id: orderId,
+        dishId: orderDishId,
+        price: orderPrice
+    };
+
+    $.ajax('/order', {
+        type: 'DELETE',
+        data: JSON.stringify(deletedDish),
+        dataType: 'json',
+        contentType: 'application/json',
+
+        success: function(data) {
+
+        },
+        error: function(error) {
+            console.log(error);
+        }
+    });
+
+}
 
 function renderDishes(dayObject, orderObject) {
 
 
-  console.log(orderObject);
 
     if (orderObject.length === 0) {
 
@@ -228,48 +224,31 @@ function renderDishes(dayObject, orderObject) {
 
         for (i = 0; i < orderObject[0].dishes.length; i++) {
 
-            deleteIndex=i;
-
-          var div='<div class="insidediv" id='+deleteIndex+' value='+i+'><img src=' + orderObject[0].dishes[i].dish.imageURL + '></img>' + '<p>' + orderObject[0].dishes[i].dish.name + '</p></div>';
-          div= $(div);
-
-          var deleteX= '<i class="fa fa-times-circle-o" id='+i+' aria-hidden="true"></i>';
-          deleteX=$(deleteX);
+            var currentDay = dayObject.dateId;
 
 
-          deleteX.click(  function(){
-
-              var orderId=orderObject[0]._id;
-               var orderDishId= orderObject[0].dishes[this.id]._id;
-               var orderPrice=orderObject[0].dishes[this.id].dish.price;
-
-
-             deleteDish(orderId, orderDishId , orderPrice);
-
-          });
-
-            $('#' + dayObject.dateId + '').append(div);
-              $('#' + dayObject.dateId + '').append(deleteX);
+            deleteDishView(orderObject[0].dishes[i], orderObject[0]._id, currentDay);
         }
+
+        index++;
+        renderCalendar(index);
     }
 
-    index++;
-    renderCalendar(index);
 }
 
-  function displaySelectedBorder(dateId){
+function displaySelectedBorder(dateId) {
 
 
-    $( '.render-food-list').css("border", "1px solid #737373");
-    $( '.render-food-list').css("background-color", "#dbdbe0" );
-          $('.render-food-list').css("opacity", "0.7" );
+    $('.render-food-list').css("border", "1px solid #737373");
+    $('.render-food-list').css("background-color", "#dbdbe0");
+    $('.render-food-list').css("opacity", "0.7");
 
-    $('#' + dateId + '').css("opacity", "1" );
-    $('#' + dateId + '').css("background-color", "#d8d8da" );
+    $('#' + dateId + '').css("opacity", "1");
+    $('#' + dateId + '').css("background-color", "#d8d8da");
     $('#' + dateId + '').css("border", "1px solid #ff7733");
 
 
-  }
+}
 
 
 function renderDays(dayObject, orderObject) {
@@ -289,16 +268,11 @@ function renderDays(dayObject, orderObject) {
 
     }
 
-    if(dayObject.dateId== thisDayId){
+    if (dayObject.dateId == thisDayId) {
 
-      console.log('is SAME DAY as TODAY');
-      console.log(renderingWeekArray[i]);
+        displaySelectedBorder(dayObject.dateId);
 
-      displaySelectedBorder(dayObject.dateId);
-
-      thisDayObject=dayObject;
-
-      console.log(thisDayObject);
+        thisDayObject = dayObject;
 
     }
 
@@ -347,50 +321,24 @@ $(document).ready(function() {
     var i;
 
 
-
-    $('ul').on('click', 'i', function(){
-
-          $(this).remove();
-          $(this).siblings('.insidediv').remove();
-          console.log(this);
-
-      });
-
-
     testingDate.setDate(testingDate.getDate() - testingWeekday + weekChanger);
-    // renders the calendar//
+    // 28 - 1(todays weekday which is monday)+ 1
     //
-    //
-    //
-    $.get('/dishes', (data) => { //  data is the json data responded //
+    index = 0;
 
+    renderCalendar(index);
+
+
+    console.log(testingWeekday);
+
+    $.get('/dishes', (data) => { //  data is the json data responded //
 
         dishesArray = data;
         optionView();
 
     });
 
-     index=0;
 
-    renderCalendar(index);
-
-
-
-
-
-//  to delete an item
-  // $('.calendardiv').on('click', '.insidediv', function(){
-  //   console.log(this);
-  //
-  //   console.log($(this).val());
-  //
-  //   console.log(currentSelectedDay);
-  //
-  //
-  // });
-
-
-    // on click of days return a selectedDay
 
     $('.calendardiv').on('click', '.render-food-list', function() {
 
@@ -399,14 +347,14 @@ $(document).ready(function() {
 
         for (i = 0; i < renderingWeekArray.length; i++) {
             if (this.id == renderingWeekArray[i].dateId) {
-            currentSelectedDay = renderingWeekArray[i];
+                currentSelectedDay = renderingWeekArray[i];
 
-            console.log(currentSelectedDay);
+                console.log(currentSelectedDay);
 
             }
         }
 
-          displaySelectedBorder(this.id);
+        displaySelectedBorder(this.id);
 
     });
 
@@ -414,7 +362,7 @@ $(document).ready(function() {
 
 
     $('.food-div').on('click', '.foodslot', function() {
-      console.log(thisDayObject);
+        console.log(thisDayObject);
         var i = 0;
 
         var selectedDish = $(this)[0].id;
@@ -423,12 +371,11 @@ $(document).ready(function() {
 
         console.log(dish);
 
-      if(currentSelectedDay===undefined){
+        if (currentSelectedDay === undefined) {
 
-        newOrder.postOrder(dish, thisDayObject);
+            newOrder.postOrder(dish, thisDayObject);
 
-      }
-        else {
+        } else {
             newOrder.postOrder(dish, currentSelectedDay);
         }
 

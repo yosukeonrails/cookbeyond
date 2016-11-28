@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>CookBeyond</title>
+    <link rel="stylesheet" href="cookbeyond.1.0.0.css" media="screen" title="no title">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+
+    <link href="https://fonts.googleapis.com/css?family=Bitter|Cabin|Dosis|Josefin+Sans|Oxygen|Rubik" rel="stylesheet">
+
+    <meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css?family=Baloo+Da|Droid+Sans|Fredoka+One|Raleway|Work+Sans" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div class="cookbeyond-nav">
+        <div class="center-logo">
+            <li>CookBeyond</li>
+        </div>
+        <span class="logout-navbar"><i class="fa fa-sign-out" aria-hidden="true"></i> logout </span>
+        <span class="user-navbar"><i class="fa fa-user" aria-hidden="true"></i> yosukeyoh <i class="fa fa-caret-down" aria-hidden="true"></i></span>
+    </div>
+
+
+
+
+
+    <div class="main">
+
+<div class="mydish-form">
+
+
+  <form class="mydish" action="index.html" method="post">
+
+<label for="name">Name your dish</label><input type="text" name="" value="">
+<label for="dishId">Give a unique ID</label><input type="text" name="" value="">
+<label for="imageURL"> Image URL</label><input type="text" name="" value="">
+<label for="price">How much?</label><input type="text" name="" value="">
+    <label for="country"> Which Country is it from?</label>
+
+    <label for="spicy">How Spicy?</label>
+    <select class="spicy" name="">
+
+      <script type= "text/javascript" src = "countries.js"></script>
+    	Select Country:   <select id="country2" name ="country2"></select>
+    </div>
+
+    <script language="javascript">
+    	populateCountries("country", "state"); // first parameter is id of country drop-down and second parameter is id of state drop-down
+    	populateCountries("country2");
+    	populateCountries("country2");
+    </script>
+
+        </select>
+        <script type="text/javascript">
+            var $ = require('jquery');
+            var i;
+
+            $('.spicy').change(function(){
+                  console.log('changing');
+
+                    for(i=0;i<5;i++){
+                      $('.spicy').append('<option>'+i+'</option>')
+                    }
+
+            });
+        </script>
+  </form>
+</div>
+
+
+    </div>
+
+
+
+
+
+</body>
+
+</html>

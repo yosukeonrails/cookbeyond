@@ -40,7 +40,10 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 var User = require('./models/users.js');
+
 var Order = require('./models/order.js');
+
+var Dish= require('./models/dishes.js');
 
 
 io.on('connection', function(socket) {
@@ -405,20 +408,13 @@ app.delete('/order', function(req, res) {
 
 app.post('/dishes', function(req, res) {
 
-    var name= req.body.name;
-    var date= req.body.date;
-    var imageURL=req.body.imageURL;
-    var dishId= req.body.dishId;
-    var dishInfo= req.body.dishInfo;
-    var price=req.body.price;
-
   Dish.create({
-    name:name,
-    dishId:dishId,
-    imageURL:imageURL,
-    dishInfo:dishInfo,
-    price:price
-
+    name:req.body.name,
+    dishId:req.body.dishId,
+    imageURL:req.body.imageURL,
+    dishInfo:req.body.dishInfo,
+    price:req.body.price,
+    data:req.body.date
   },
 function(err,dish){
   if(err){

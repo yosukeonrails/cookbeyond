@@ -78,12 +78,12 @@
 	var thisWeekDay = new Date().getDay();
 	var thisDayId = new Date().getDate() + '' + new Date().getMonth() + '' + new Date().getFullYear();
 	var thisDayObject;
-	var weekChanger = -1;
+	
 	var weekDays;
 	var renderingWeekArray = [];
 	var testingDate = new Date();
-	var testingDay = new Date(2016, 10, 21).getDate();
 	var testingWeekday = thisWeekDay;
+	var weekChanger = -1;
 	var currentSelectedDay = thisDayObject;
 	var dishList = [];
 	var index = 0;
@@ -95,6 +95,36 @@
 	// when the user first sees the calendar,
 	// the person sees the week that day are in.
 	
+	
+	function deleteDishView(postedDish, orderId, currentDay) {
+	
+	    var appended = '<div class="insidediv"><img src=' + postedDish.dish.imageURL + '></img>' + '<p>' + postedDish.dish.name + '</p></div>';
+	    appended = $(appended);
+	
+	    var deleteX = '<i class="fa fa-times-circle-o"  aria-hidden="true"></i>';
+	
+	    deleteX = $(deleteX);
+	    console.log(deleteX);
+	
+	    deleteX.click(function () {
+	        console.log(data, appended, deleteX);
+	
+	        appended.remove();
+	        deleteX.remove();
+	
+	        var orderDishId = postedDish._id;
+	        var orderPrice = postedDish.dish.price;
+	
+	        console.log(orderId);
+	        console.log(orderPrice);
+	        console.log(orderDishId);
+	
+	        deleteDish(orderId, orderDishId, orderPrice);
+	    });
+	
+	    $('#' + currentDay + '').append(appended);
+	    $('#' + currentDay + '').append(deleteX);
+	}
 	
 	var STATE = {
 	
@@ -134,34 +164,14 @@
 	                    var divId = data.dishes.length - 1;
 	                    console.log(divId);
 	                    var postedDish = data.dishes[data.dishes.length - 1];
+	                    var orderId = data._id;
 	
 	                    console.log('here is the data back:');
 	
 	                    currentObjectId = STATE.userOrder[data._id]._id;
+	                    var currentDay = currentSelectedDay.dateId;
 	
-	                    var appended = '<div class="insidediv" id=' + divId + '><img src=' + postedDish.dish.imageURL + '></img>' + '<p>' + postedDish.dish.name + '</p></div>';
-	                    appended = $(appended);
-	
-	                    var deleteX = '<i class="fa fa-times-circle-o" id=' + divId + ' aria-hidden="true"></i>';
-	                    deleteX = $(deleteX);
-	
-	                    deleteX.click(function () {
-	                        console.log(data);
-	
-	                        appended.remove();
-	                        deleteX.remove();
-	
-	                        var orderId = data._id;
-	                        var orderDishId = postedDish._id;
-	                        var orderPrice = postedDish.dish.price;
-	
-	                        console.log(orderId);console.log(orderPrice);console.log(orderDishId);
-	
-	                        deleteDish(orderId, orderDishId, orderPrice);
-	                    });
-	
-	                    $('#' + currentSelectedDay.dateId + '').append(appended);
-	                    $('#' + currentSelectedDay.dateId + '').append(deleteX);
+	                    deleteDishView(postedDish, orderId, currentDay);
 	                },
 	                error: function error(_error) {
 	                    console.log(_error);
@@ -172,15 +182,6 @@
 	
 	    return Order;
 	}();
-	
-	//
-	//
-	//
-	//
-	//
-	//
-	//
-	
 	
 	function getCurrentDishes(dayObject, dayObjectId) {
 	
@@ -206,14 +207,12 @@
 	function renderCalendar(index) {
 	
 	    console.log(index);
+	
 	    if (index < 7) {
 	
 	        testingDate.setDate(testingDate.getDate() + 1);
 	
-	        console.log(testingDate);
-	
 	        var dayObject = {
-	
 	            date: new Date(testingDate.getFullYear(), testingDate.getMonth(), testingDate.getDate()),
 	            day: testingDate.getDate(),
 	            weekday: testingDate.getDay(),
@@ -255,38 +254,20 @@
 	
 	function renderDishes(dayObject, orderObject) {
 	
-	    console.log(orderObject);
-	
 	    if (orderObject.length === 0) {} else {
 	
 	        console.log(orderObject[0].dishes);
 	
 	        for (i = 0; i < orderObject[0].dishes.length; i++) {
 	
-	            deleteIndex = i;
+	            var currentDay = dayObject.dateId;
 	
-	            var div = '<div class="insidediv" id=' + deleteIndex + ' value=' + i + '><img src=' + orderObject[0].dishes[i].dish.imageURL + '></img>' + '<p>' + orderObject[0].dishes[i].dish.name + '</p></div>';
-	            div = $(div);
-	
-	            var deleteX = '<i class="fa fa-times-circle-o" id=' + i + ' aria-hidden="true"></i>';
-	            deleteX = $(deleteX);
-	
-	            deleteX.click(function () {
-	
-	                var orderId = orderObject[0]._id;
-	                var orderDishId = orderObject[0].dishes[this.id]._id;
-	                var orderPrice = orderObject[0].dishes[this.id].dish.price;
-	
-	                deleteDish(orderId, orderDishId, orderPrice);
-	            });
-	
-	            $('#' + dayObject.dateId + '').append(div);
-	            $('#' + dayObject.dateId + '').append(deleteX);
+	            deleteDishView(orderObject[0].dishes[i], orderObject[0]._id, currentDay);
 	        }
-	    }
 	
-	    index++;
-	    renderCalendar(index);
+	        index++;
+	        renderCalendar(index);
+	    }
 	}
 	
 	function displaySelectedBorder(dateId) {
@@ -316,14 +297,9 @@
 	
 	    if (dayObject.dateId == thisDayId) {
 	
-	        console.log('is SAME DAY as TODAY');
-	        console.log(renderingWeekArray[i]);
-	
 	        displaySelectedBorder(dayObject.dateId);
 	
 	        thisDayObject = dayObject;
-	
-	        console.log(thisDayObject);
 	    }
 	
 	    renderDishes(dayObject, orderObject);
@@ -365,43 +341,21 @@
 	    var currentDay;
 	    var i;
 	
-	    $('ul').on('click', 'i', function () {
-	
-	        $(this).remove();
-	        $(this).siblings('.insidediv').remove();
-	        console.log(this);
-	    });
-	
 	    testingDate.setDate(testingDate.getDate() - testingWeekday + weekChanger);
-	    // renders the calendar//
+	    // 28 - 1(todays weekday which is monday)+ 1
 	    //
-	    //
-	    //
-	    $.get('/dishes', function (data) {
-	        //  data is the json data responded //
-	
-	
-	        dishesArray = data;
-	        optionView();
-	    });
-	
 	    index = 0;
 	
 	    renderCalendar(index);
 	
-	    //  to delete an item
-	    // $('.calendardiv').on('click', '.insidediv', function(){
-	    //   console.log(this);
-	    //
-	    //   console.log($(this).val());
-	    //
-	    //   console.log(currentSelectedDay);
-	    //
-	    //
-	    // });
+	    console.log(testingWeekday);
 	
+	    $.get('/dishes', function (data) {
+	        //  data is the json data responded //
 	
-	    // on click of days return a selectedDay
+	        dishesArray = data;
+	        optionView();
+	    });
 	
 	    $('.calendardiv').on('click', '.render-food-list', function () {
 	

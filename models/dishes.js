@@ -12,15 +12,18 @@ var DishSchema = new mongoose.Schema({
     },
 
    dishId: {
-     type:String
+     type:String,
+     unique:true
    },
 
     imageURL:{
       type:String
     },
+
     price:{
       type:Number
     },
+
     dishInfo:{
       type:Object
     }
