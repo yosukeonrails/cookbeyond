@@ -29,6 +29,7 @@ var testingWeekday = thisWeekDay;
 var currentSelectedDay = thisDayObject;
 var dishList = [];
 var index=0;
+  var deleteIndex;
 
 
 // 1 - 2 = 30 of OCtober
@@ -99,7 +100,7 @@ class Order {
 
         appended.remove();
         (deleteX).remove();
-        
+
            var orderId=data._id;
            var orderDishId= postedDish._id;
            var orderPrice=postedDish.dish.price;
@@ -227,20 +228,22 @@ function renderDishes(dayObject, orderObject) {
 
         for (i = 0; i < orderObject[0].dishes.length; i++) {
 
-          var div='<div class="insidediv" id='+i+' value='+i+'><img src=' + orderObject[0].dishes[i].dish.imageURL + '></img>' + '<p>' + orderObject[0].dishes[i].dish.name + '</p></div>';
+            deleteIndex=i;
+
+          var div='<div class="insidediv" id='+deleteIndex+' value='+i+'><img src=' + orderObject[0].dishes[i].dish.imageURL + '></img>' + '<p>' + orderObject[0].dishes[i].dish.name + '</p></div>';
           div= $(div);
+
           var deleteX= '<i class="fa fa-times-circle-o" id='+i+' aria-hidden="true"></i>';
           deleteX=$(deleteX);
 
-          deleteX.click(  function(){
 
+          deleteX.click(  function(){
 
               var orderId=orderObject[0]._id;
                var orderDishId= orderObject[0].dishes[this.id]._id;
                var orderPrice=orderObject[0].dishes[this.id].dish.price;
 
-              (div).remove();
-              (deleteX).remove();
+
              deleteDish(orderId, orderDishId , orderPrice);
 
           });
@@ -258,9 +261,13 @@ function renderDishes(dayObject, orderObject) {
 
 
     $( '.render-food-list').css("border", "1px solid #737373");
-      $( '.render-food-list').css("height", "122px");
-    $('#' + dateId + '').css("border", "3px solid #ff7733");
-      $('#' + dateId + '').css("height", "126px");
+    $( '.render-food-list').css("background-color", "#dbdbe0" );
+          $('.render-food-list').css("opacity", "0.7" );
+
+    $('#' + dateId + '').css("opacity", "1" );
+    $('#' + dateId + '').css("background-color", "#d8d8da" );
+    $('#' + dateId + '').css("border", "1px solid #ff7733");
+
 
   }
 
@@ -329,11 +336,6 @@ function displayFood(dishes) {
 
 
 
-
-
-
-
-
 $(document).ready(function() {
 
 
@@ -343,6 +345,17 @@ $(document).ready(function() {
     var dishId;
     var currentDay;
     var i;
+
+
+
+    $('ul').on('click', 'i', function(){
+
+          $(this).remove();
+          $(this).siblings('.insidediv').remove();
+          console.log(this);
+
+      });
+
 
     testingDate.setDate(testingDate.getDate() - testingWeekday + weekChanger);
     // renders the calendar//
@@ -366,19 +379,15 @@ $(document).ready(function() {
 
 
 //  to delete an item
-  $('.calendardiv').on('click', '.insidediv', function(){
-    console.log(this);
-    console.log($(this).val());
-    console.log(currentSelectedDay);
-
-
-    // get request by id //
-    //
-
-
-
-
-  });
+  // $('.calendardiv').on('click', '.insidediv', function(){
+  //   console.log(this);
+  //
+  //   console.log($(this).val());
+  //
+  //   console.log(currentSelectedDay);
+  //
+  //
+  // });
 
 
     // on click of days return a selectedDay
@@ -505,9 +514,6 @@ $(document).ready(function() {
     });
 
 
-
-
-
     // Adding or subtracting count
 
     $('.dayform ul').on('change', 'input', function() {
@@ -522,20 +528,6 @@ $(document).ready(function() {
     //
 
 
-    $('.dayform ul').on('click', 'p', function() {
-
-        // console.log($(this));
-        // console.log(weekArray[currentDay].orderArray[$(this)[0].id]);
-        var deletingArray = weekArray[currentDay].orderArray;
-
-        deletingArray.splice($(this)[0].id, 1);
-        console.log(deletingArray);
-
-        newOrder.updateOrder(weekArray, currentObjectId);
-        newView.displayDishList(weekArray[currentDay].orderArray);
-
-
-    });
 
 
 

@@ -22,6 +22,7 @@ export default class User {
 
     }
 
+
     logInUser() {
 
         var user = {
@@ -37,7 +38,8 @@ export default class User {
             contentType: 'application/json',
 
             success: function() {
-              console.log('YOURE LOGGED IN!');
+              
+              window.location="/order.html";
             },
             error: function(error) {
                   console.log('NOPE');

@@ -400,6 +400,39 @@ app.delete('/order', function(req, res) {
 });
 
 
+// post your own dishes//
+//
+
+app.post('/dishes', function(req, res) {
+
+    var name= req.body.name;
+    var date= req.body.date;
+    var imageURL=req.body.imageURL;
+    var dishId= req.body.dishId;
+    var dishInfo= req.body.dishInfo;
+    var price=req.body.price;
+
+  Dish.create({
+    name:name,
+    dishId:dishId,
+    imageURL:imageURL,
+    dishInfo:dishInfo,
+    price:price
+
+  },
+function(err,dish){
+  if(err){
+    return res.status(500).json({
+          message: 'Internal Server Error'
+      });
+  }
+  res.status(201).json(dish);
+  console.log('dish posted!');
+});
+
+});
+
+
 
 
 
