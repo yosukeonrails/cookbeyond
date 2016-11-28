@@ -185,8 +185,6 @@
 	
 	function getCurrentDishes(dayObject, dayObjectId) {
 	
-	    console.log(dayObjectId);
-	
 	    var dateId = dayObjectId;
 	
 	    var ajax = $.ajax('/order/date/' + dateId, {
@@ -195,12 +193,14 @@
 	
 	        success: function success(data) {
 	
-	            renderDays(dayObject, data);
+	            renderDishes(dayObject, data);
+	            console.log('successs!');
 	        },
-	
 	        error: function error(_error2) {
 	            console.log(_error2);
+	            console.log('is this a 404? this should bump up index and then run renderCal again');
 	        }
+	
 	    });
 	}
 	
@@ -221,12 +221,9 @@
 	            dateId: testingDate.getDate() + '' + testingDate.getMonth() + '' + testingDate.getFullYear()
 	        };
 	
-	        getCurrentDishes(dayObject, dayObject.dateId);
+	        renderDays(dayObject);
 	
 	        renderingWeekArray.push(dayObject);
-	
-	        console.log(dayObject.dateId);
-	        console.log(thisDayId);
 	    }
 	}
 	
@@ -254,7 +251,12 @@
 	
 	function renderDishes(dayObject, orderObject) {
 	
-	    if (orderObject.length === 0) {} else {
+	    if (orderObject.length === 0) {
+	
+	        console.log('sadly this is waht happened but there is a way to fix it');
+	        index++;
+	        renderCalendar(index);
+	    } else {
 	
 	        console.log(orderObject[0].dishes);
 	
@@ -281,7 +283,7 @@
 	    $('#' + dateId + '').css("border", "1px solid #ff7733");
 	}
 	
-	function renderDays(dayObject, orderObject) {
+	function renderDays(dayObject) {
 	
 	    var mS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 	
@@ -302,7 +304,7 @@
 	        thisDayObject = dayObject;
 	    }
 	
-	    renderDishes(dayObject, orderObject);
+	    getCurrentDishes(dayObject, dayObject.dateId);
 	}
 	
 	var View = function () {
@@ -341,9 +343,12 @@
 	    var currentDay;
 	    var i;
 	
+	    console.log('TESTING 1 , rearragended the functions and added the error function');
+	
 	    testingDate.setDate(testingDate.getDate() - testingWeekday + weekChanger);
-	    // 28 - 1(todays weekday which is monday)+ 1
-	    //
+	    // 28 - 1(todays weekday which is monday)-1
+	
+	
 	    index = 0;
 	
 	    renderCalendar(index);

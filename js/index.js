@@ -136,8 +136,6 @@ class Order {
 
 function getCurrentDishes(dayObject, dayObjectId) {
 
-    console.log(dayObjectId);
-
     var dateId = dayObjectId;
 
     var ajax = $.ajax('/order/date/' + dateId, {
@@ -146,13 +144,16 @@ function getCurrentDishes(dayObject, dayObjectId) {
 
         success: function(data) {
 
+        renderDishes(dayObject, data);
+        console.log('successs!');
 
-            renderDays(dayObject, data);
         },
-
         error: function(error) {
             console.log(error);
+            console.log('is this a 404? this should bump up index and then run renderCal again');
+
         }
+
     });
 }
 
@@ -174,12 +175,11 @@ function renderCalendar(index) {
             dateId: testingDate.getDate() + '' + testingDate.getMonth() + '' + testingDate.getFullYear()
         };
 
-        getCurrentDishes(dayObject, dayObject.dateId);
+        renderDays(dayObject);
+
 
         renderingWeekArray.push(dayObject);
 
-        console.log(dayObject.dateId);
-        console.log(thisDayId);
 
     }
 
@@ -213,10 +213,11 @@ function deleteDish(orderId, orderDishId, orderPrice) {
 
 function renderDishes(dayObject, orderObject) {
 
-
-
     if (orderObject.length === 0) {
 
+      console.log('sadly this is waht happened but there is a way to fix it');
+      index++;
+      renderCalendar(index);
 
     } else {
 
@@ -251,7 +252,7 @@ function displaySelectedBorder(dateId) {
 }
 
 
-function renderDays(dayObject, orderObject) {
+function renderDays(dayObject) {
 
 
 
@@ -276,8 +277,8 @@ function renderDays(dayObject, orderObject) {
 
     }
 
+   getCurrentDishes(dayObject, dayObject.dateId);
 
-    renderDishes(dayObject, orderObject);
 
 }
 
@@ -320,10 +321,14 @@ $(document).ready(function() {
     var currentDay;
     var i;
 
+    console.log('TESTING 1 , rearragended the functions and added the error function');
+
 
     testingDate.setDate(testingDate.getDate() - testingWeekday + weekChanger);
-    // 28 - 1(todays weekday which is monday)+ 1
-    //
+    // 28 - 1(todays weekday which is monday)-1
+
+
+
     index = 0;
 
     renderCalendar(index);
@@ -337,6 +342,7 @@ $(document).ready(function() {
         optionView();
 
     });
+
 
 
 
