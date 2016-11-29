@@ -88,6 +88,11 @@
 	var dishList = [];
 	var index = 0;
 	var deleteIndex;
+	var titleDate;
+	var titleSelector;
+	var mS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+	
+	var wS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 	
 	// 1 - 2 = 30 of OCtober
 	
@@ -204,9 +209,43 @@
 	    });
 	}
 	
+	function titleWeek(titleSelector, testingDate) {
+	
+	    if (testingDate.getDate() > 3) {
+	        titleDate = testingDate.getDate() + 'th';
+	    }
+	    if (testingDate.getDate() == 1) {
+	        titleDate = testingDate.getDate() + 'st';
+	    }
+	    if (testingDate.getDate() == 2) {
+	        titleDate = testingDate.getDate() + 'nd';
+	    }
+	    if (testingDate.getDate() == 3) {
+	        titleDate = testingDate.getDate() + 'rd';
+	    }
+	
+	    $(titleSelector).text(wS[testingDate.getDay()] + ' , ' + mS[testingDate.getMonth()] + ' ' + titleDate + ',  ' + testingDate.getFullYear());
+	    console.log(wS[testingDate.getDay()]);
+	    console.log(mS[testingDate.getMonth()]);
+	    console.log(titleDate);
+	}
+	
 	function renderCalendar(index) {
 	
 	    console.log(index);
+	
+	    if (index == 1) {
+	        console.log('begggining');
+	        titleSelector = $('.begin-week h1');
+	
+	        titleWeek(titleSelector, testingDate);
+	    }
+	
+	    if (index == 7) {
+	        titleSelector = $('.end-week h1');
+	        console.log('end');
+	        titleWeek(titleSelector, testingDate);
+	    }
 	
 	    if (index < 7) {
 	
@@ -256,12 +295,9 @@
 	
 	    if (orderObject.length === 0) {
 	
-	        console.log('sadly this is waht happened but there is a way to fix it');
 	        index++;
 	        renderCalendar(index);
 	    } else {
-	
-	        console.log(orderObject[0].dishes);
 	
 	        for (i = 0; i < orderObject[0].dishes.length; i++) {
 	
@@ -287,10 +323,6 @@
 	}
 	
 	function renderDays(dayObject) {
-	
-	    var mS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-	
-	    var wS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 	
 	    if (dayObject.day == thisDay) {
 	
@@ -358,7 +390,7 @@
 	    var currentDay;
 	    var i;
 	
-	    console.log('testing 5: testing the weekChaner this this week');
+	    console.log('testing date title 1');
 	
 	    loadCalendar(index, weekChanger, testingDate);
 	

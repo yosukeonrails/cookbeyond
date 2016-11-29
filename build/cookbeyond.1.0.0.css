@@ -6869,10 +6869,10 @@ html {
 }
 .week-changer {
   height: 80px;
-  width: 570px;
+  width: 700px;
   margin-left: auto;
   margin-right: auto;
-  margin-bottom: 60px;
+  margin-bottom: 30px;
   border: #262626;
   border-radius: 4px;
   padding-top: 10px;
@@ -6883,8 +6883,13 @@ html {
   padding-top: 5px;
 }
 .week-changer h1 {
-  font-size: 20px;
-  width: 350px;
+  border: 1px solid #262626;
+  padding: 5px;
+  color: white;
+  border-radius: 4px;
+  font-size: 17px;
+  width: 280px;
+  background-color: #262626;
   text-align: center;
   margin-left: auto;
   margin-right: auto;
