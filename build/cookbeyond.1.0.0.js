@@ -369,7 +369,7 @@
 	    $('.food-div').append("<div class='foodslot' id=" + dishes.dishId + "><div class='foodimage'  style='background-image:url(" + dishes.imageURL + "); background-size: 130px 120px'> </div> <label>" + dishes.name + "</label></div> ");
 	}
 	
-	function loadCalendar(index, weekChanger, testingDate) {
+	function loadCalendar(index, weekChanger, testingDate, testingWeekday) {
 	
 	    $('.render-food-list').remove();
 	
@@ -390,9 +390,31 @@
 	    var currentDay;
 	    var i;
 	
+	    console.log('testing the week starter 4');
+	
+	    for (i = 0; i < wS.length; i++) {
+	
+	        var newI = -(i - 1);
+	        // if 0
+	        $('.week-starter-select').append('<option id=' + newI + '>' + wS[i] + '</option>');
+	    }
+	
+	    $('.week-starter-select').change(function () {
+	
+	        $('.week-starter-select option:selected').each(function () {
+	
+	            testingWeekday = this.id;
+	            index = 0;
+	            testingDate = new Date();
+	
+	            loadCalendar(index, weekChanger, testingDate, testingWeekday);
+	        });
+	        // here we change the testingWeekday
+	    });
+	
 	    console.log('testing date title 1');
 	
-	    loadCalendar(index, weekChanger, testingDate);
+	    loadCalendar(index, weekChanger, testingDate, testingWeekday);
 	
 	    $.get('/dishes', function (data) {
 	        //  data is the json data responded //
@@ -407,7 +429,7 @@
 	        weekChanger = weekChanger + 7;
 	        index = 0;
 	        console.log(weekChanger);
-	        loadCalendar(index, weekChanger, testingDate);
+	        loadCalendar(index, weekChanger, testingDate, testingWeekday);
 	    });
 	
 	    $('#previous-week, .fa.fa-arrow-circle-o-left').click(function () {
@@ -417,7 +439,8 @@
 	        index = 0;
 	
 	        console.log(weekChanger);
-	        loadCalendar(index, weekChanger, testingDate);
+	
+	        loadCalendar(index, weekChanger, testingDate, testingWeekday);
 	    });
 	
 	    $('.calendardiv').on('click', '.render-food-list', function () {
