@@ -25,7 +25,7 @@ var weekDays;
 var renderingWeekArray = [];
 var testingDate = new Date();
 var testingWeekday = thisWeekDay;
-var weekChanger = -1;
+var weekChanger =-1;
 var currentSelectedDay = thisDayObject;
 var dishList = [];
 var index = 0;
@@ -160,6 +160,7 @@ function getCurrentDishes(dayObject, dayObjectId) {
 
 function renderCalendar(index) {
 
+
     console.log(index);
 
     if (index < 7) {
@@ -177,11 +178,14 @@ function renderCalendar(index) {
 
         renderDays(dayObject);
 
-
         renderingWeekArray.push(dayObject);
 
+    } else if(index==7){
+
+      console.log('end of loop now testingDate should be == -6');
 
     }
+
 
 
 }
@@ -311,6 +315,21 @@ function displayFood(dishes) {
 
 
 
+
+function loadCalendar(index, weekChanger,testingDate){
+
+  $('.render-food-list').remove();
+
+  testingDate.setDate(testingDate.getDate() - testingWeekday + weekChanger);
+  // 28 - 1(todays weekday which is monday)-1
+
+  index = 0;
+
+  renderCalendar(index);
+
+}
+
+
 $(document).ready(function() {
 
 
@@ -321,28 +340,37 @@ $(document).ready(function() {
     var currentDay;
     var i;
 
-    console.log('TESTING 1 , rearragended the functions and added the error function');
+    console.log('testing 5: testing the weekChaner this this week');
 
-
-    testingDate.setDate(testingDate.getDate() - testingWeekday + weekChanger);
-    // 28 - 1(todays weekday which is monday)-1
-
-
-
-    index = 0;
-
-    renderCalendar(index);
-
-
-    console.log(testingWeekday);
+     loadCalendar(index, weekChanger, testingDate);
 
     $.get('/dishes', (data) => { //  data is the json data responded //
-
         dishesArray = data;
         optionView();
+    });
+
+    $('#next-week, .fa.fa-arrow-circle-o-right').click(function(){
+
+
+        testingDate=new Date();
+
+        weekChanger=weekChanger+7;
+        index=0;
+        console.log(weekChanger);
+        loadCalendar(index, weekChanger,testingDate);
 
     });
 
+
+    $('#previous-week, .fa.fa-arrow-circle-o-left').click(function(){
+
+    testingDate=new Date();
+      weekChanger=weekChanger-7;
+      index=0;
+
+      console.log(weekChanger);
+      loadCalendar(index, weekChanger,testingDate);
+    });
 
 
 
@@ -397,88 +425,6 @@ $(document).ready(function() {
         }
 
     }
-
-
-
-    $('#arrow-right').click(function() {
-
-
-        rearrangedArray = [];
-        for (i = 0; i < 7; i++) {
-
-            if (weekArray[i].position == 7) {
-                weekArray[i].position = weekArray[i].position - 6;
-
-            } else {
-                weekArray[i].position = weekArray[i].position + 1;
-            }
-
-            if (i == 6) {
-
-                arrangeArray();
-            }
-
-
-        } // end of for
-
-
-    });
-
-
-    $('#arrow-left').click(function() {
-
-
-        rearrangedArray = [];
-
-        for (i = 0; i < 7; i++) {
-
-            if (weekArray[i].position == 1) {
-
-                weekArray[i].position = weekArray[i].position + 6;
-
-            } else {
-                weekArray[i].position = weekArray[i].position - 1;
-            }
-
-            if (i == 6) {
-
-                arrangeArray();
-            }
-        } // end of for
-
-    });
-
-    $('.weekdiv ul').on('click', 'li', function() {
-
-
-        $('.dayform h1').text(weekArray[this.id].week);
-        console.log(weekArray[this.id].orderArray);
-        console.log(dishesArray);
-        console.log(weekArray);
-        // console.log(weekArray[this.id].orderArray);
-        newView.displayDishList(weekArray[this.id].orderArray);
-
-        $('.dayform').hide();
-
-        $('.dayform').show();
-
-        currentDay = this.id;
-
-    });
-
-
-    // Adding or subtracting count
-
-    $('.dayform ul').on('change', 'input', function() {
-
-
-        //   weekArray[currentDay].orderArray[$(this)[0].id].count = $(this).val();
-        // console.log(  weekArray[currentDay].orderArray[$(this)[0].id].count );
-        //
-
-    });
-    // DELETING DISH .
-    //
 
 
 
