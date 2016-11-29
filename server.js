@@ -110,6 +110,10 @@ app.get('/hidden', passport.authenticate('basic', {
 
 });
 
+
+
+
+
 app.post('/users', function(req, res) {
 
     if (!req.body) {
@@ -140,6 +144,33 @@ app.post('/users', function(req, res) {
         });
     }
 
+  // userNickname
+
+    if (!('userNickname' in req.body)) {
+        return res.status(422).json({
+            message: 'Missing field: userNickname'
+        });
+    }
+
+    var userNickname = req.body.userNickname;
+
+    if (typeof userNickname !== 'string') {
+        return res.status(422).json({
+            message: 'Incorrect field type: usernickname'
+        });
+    }
+
+    userNickname = userNickname.trim();
+
+    if (userNickname === '') {
+        return res.status(422).json({
+            message: 'Incorrect field length: usernickname'
+        });
+    }
+
+    // usernickname end
+
+
     if (!('password' in req.body)) {
         return res.status(422).json({
             message: 'Missing field: password'
@@ -165,7 +196,8 @@ app.post('/users', function(req, res) {
     var newUser = new User({
 
         username: username,
-        password: password
+        password: password,
+        userNickname:userNickname
 
     });
 
@@ -429,7 +461,22 @@ function(err,dish){
 });
 
 
+app.get('/user', function(req,res){
 
+    User.find({
+      user:req.user._id,
+      
+    }, function(err, data){
+      if(err){
+        return res.status(500).json({
+              message: 'Internal Server Error'
+          });
+      }
+
+      res.status(201).json(data);
+      console.log('user gotten');
+    });
+});
 
 
 /// running the server; //

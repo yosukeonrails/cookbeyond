@@ -2,6 +2,7 @@ var $ = require('jquery');
 var events = require('events');
 var myEmitter = new events.EventEmitter();
 import User from './users.js';
+import Countries from './countries.js';
 var weekArray = require('./weekarray.js');
 var dishesArray = [];
 var rearrangedArray = [];
@@ -13,7 +14,6 @@ var repeatedArray = [];
 var currentArray = [];
 var $ = require('jquery');
 var bootstrap = require('bootstrap');
-
 var thisYear = new Date().getFullYear();
 var thisMonth = new Date().getMonth();
 var thisDay = new Date().getDate();
@@ -25,7 +25,7 @@ var weekDays;
 var renderingWeekArray = [];
 var testingDate = new Date();
 var testingWeekday = thisWeekDay;
-var weekChanger =-1;
+var weekChanger = -1;
 var currentSelectedDay = thisDayObject;
 var dishList = [];
 var index = 0;
@@ -149,8 +149,8 @@ function getCurrentDishes(dayObject, dayObjectId) {
 
         success: function(data) {
 
-        renderDishes(dayObject, data);
-        console.log('successs!');
+            renderDishes(dayObject, data);
+            console.log('successs!');
 
         },
         error: function(error) {
@@ -163,25 +163,25 @@ function getCurrentDishes(dayObject, dayObjectId) {
 }
 
 
-function titleWeek(titleSelector,testingDate){
+function titleWeek(titleSelector, testingDate) {
 
-          if(testingDate.getDate()>3){
-            titleDate=testingDate.getDate()+'th';
-          }
-          if(testingDate.getDate()==1){
-            titleDate=testingDate.getDate()+'st';
-          }
-          if(testingDate.getDate()==2){
-            titleDate=testingDate.getDate()+'nd';
-          }
-          if(testingDate.getDate()==3){
-            titleDate=testingDate.getDate()+'rd';
-          }
+    if (testingDate.getDate() > 3) {
+        titleDate = testingDate.getDate() + 'th';
+    }
+    if (testingDate.getDate() == 1) {
+        titleDate = testingDate.getDate() + 'st';
+    }
+    if (testingDate.getDate() == 2) {
+        titleDate = testingDate.getDate() + 'nd';
+    }
+    if (testingDate.getDate() == 3) {
+        titleDate = testingDate.getDate() + 'rd';
+    }
 
-        $(titleSelector).text(wS[testingDate.getDay()]+' , '+mS[testingDate.getMonth()]+' '+titleDate+',  '+testingDate.getFullYear());
-        console.log(wS[testingDate.getDay()]);
-        console.log(mS[testingDate.getMonth()]);
-        console.log(titleDate);
+    $(titleSelector).text(wS[testingDate.getDay()] + ' , ' + mS[testingDate.getMonth()] + ' ' + titleDate + ',  ' + testingDate.getFullYear());
+    console.log(wS[testingDate.getDay()]);
+    console.log(mS[testingDate.getMonth()]);
+    console.log(titleDate);
 
 }
 
@@ -191,18 +191,18 @@ function renderCalendar(index) {
 
     console.log(index);
 
-    if(index==1){
-          console.log('begggining');
-      titleSelector= $('.begin-week h1');
+    if (index == 1) {
+        console.log('begggining');
+        titleSelector = $('.begin-week h1');
 
-       titleWeek(titleSelector,testingDate);
+        titleWeek(titleSelector, testingDate);
 
     }
 
-    if(index==7){
-        titleSelector= $('.end-week h1');
-          console.log('end');
-        titleWeek(titleSelector,testingDate);
+    if (index == 7) {
+        titleSelector = $('.end-week h1');
+        console.log('end');
+        titleWeek(titleSelector, testingDate);
     }
 
     if (index < 7) {
@@ -223,9 +223,9 @@ function renderCalendar(index) {
 
         renderingWeekArray.push(dayObject);
 
-    } else if(index==7){
+    } else if (index == 7) {
 
-      console.log('end of loop now testingDate should be == -6');
+        console.log('end of loop now testingDate should be == -6');
 
     }
 
@@ -263,8 +263,8 @@ function renderDishes(dayObject, orderObject) {
     if (orderObject.length === 0) {
 
 
-      index++;
-      renderCalendar(index);
+        index++;
+        renderCalendar(index);
 
     } else {
 
@@ -301,9 +301,6 @@ function displaySelectedBorder(dateId) {
 function renderDays(dayObject) {
 
 
-
-
-
     if (dayObject.day == thisDay) {
 
         $('.calendardiv ul').append('<div class="render-food-list" style="color:#737373" id=' + dayObject.dateId + '>  <div class="datesdiv" style="color:#ffffcc" id=' + dayObject.dateId + '>' + wS[dayObject.weekday] + '</br>' + mS[dayObject.month] + '</br>' + dayObject.day + '</br></div></div> ');
@@ -321,7 +318,7 @@ function renderDays(dayObject) {
 
     }
 
-   getCurrentDishes(dayObject, dayObject.dateId);
+    getCurrentDishes(dayObject, dayObject.dateId);
 
 
 }
@@ -356,16 +353,16 @@ function displayFood(dishes) {
 
 
 
-function loadCalendar(index, weekChanger,testingDate, testingWeekday){
+function loadCalendar(index, weekChanger, testingDate, testingWeekday) {
 
-  $('.render-food-list').remove();
+    $('.render-food-list').remove();
 
-  testingDate.setDate(testingDate.getDate() - testingWeekday + weekChanger);
-  // 28 - 1(todays weekday which is monday)-1
+    testingDate.setDate(testingDate.getDate()-testingWeekday + weekChanger);
+    // 28 - 1(todays weekday which is monday)-1
 
-  index = 0;
+    index = 0;
 
-  renderCalendar(index);
+    renderCalendar(index);
 
 }
 
@@ -380,65 +377,68 @@ $(document).ready(function() {
     var currentDay;
     var i;
 
+    getUser();
+
     console.log('testing the week starter 4');
 
 
-   for(i=0;i<wS.length;i++){
+    for (i = 0; i < wS.length; i++) {
 
-   var newI= -(i-1);
-  // if 0
-   $('.week-starter-select').append('<option id='+newI+'>'+wS[i]+'</option>');
+        var newI = -(i-thisWeekDay);
+        // if 0
+        $('.week-starter-select').append('<option id=' + newI + '>' + wS[i] + '</option>');
 
-}
+    }
 
 
-$('.week-starter-select').change(function(){
+    $('.week-starter-select').change(function() {
 
-   $('.week-starter-select option:selected').each(function(){
+        $('.week-starter-select option:selected').each(function() {
 
-          testingWeekday=this.id;
-          index=0;
-          testingDate=new Date();
+            testingWeekday = this.id;
+            index = 0;
+            testingDate = new Date();
 
-        loadCalendar(index, weekChanger, testingDate, testingWeekday);
+            loadCalendar(index, weekChanger, testingDate, testingWeekday);
+                                    //-1          //29           // 0
+        });
+        // here we change the testingWeekday
 
-          });
-    // here we change the testingWeekday
 
-});
+    });
 
     console.log('testing date title 1');
 
-     loadCalendar(index, weekChanger, testingDate,testingWeekday);
+    loadCalendar(index, weekChanger, testingDate, testingWeekday);
 
     $.get('/dishes', (data) => { //  data is the json data responded //
         dishesArray = data;
         optionView();
     });
 
-    $('#next-week, .fa.fa-arrow-circle-o-right').click(function(){
+    $('#next-week, .fa.fa-arrow-circle-o-right').click(function() {
 
 
-        testingDate=new Date();
+        testingDate = new Date();
 
-        weekChanger=weekChanger+7;
-        index=0;
+        weekChanger = weekChanger + 7;
+        index = 0;
         console.log(weekChanger);
-        loadCalendar(index, weekChanger,testingDate,testingWeekday);
+        loadCalendar(index, weekChanger, testingDate, testingWeekday);
 
     });
 
 
-    $('#previous-week, .fa.fa-arrow-circle-o-left').click(function(){
+    $('#previous-week, .fa.fa-arrow-circle-o-left').click(function() {
 
-    testingDate=new Date();
-      weekChanger=weekChanger-7;
-      index=0;
+        testingDate = new Date();
+        weekChanger = weekChanger - 7;
+        index = 0;
 
-      console.log(weekChanger);
+        console.log(weekChanger);
 
 
-      loadCalendar(index, weekChanger,testingDate,testingWeekday);
+        loadCalendar(index, weekChanger, testingDate, testingWeekday);
 
 
     });
@@ -498,10 +498,6 @@ $('.week-starter-select').change(function(){
     }
 
 
-
-
-
-
     //log in
 
 
@@ -516,32 +512,50 @@ $('.week-starter-select').change(function(){
     $('#login-button').click(function() {
 
         console.log('clicked');
-
         window.location.href = "/home.html";
 
-
     });
 
+    function getUser() {
 
-    // sign up
-    //
+        var ajax = $.ajax('/user', {
 
-    //
+            type: 'GET',
+
+            success: function(data) {
+
+                console.log(data);
+
+            },
+            error: function(error) {
+                console.log(error);
+                console.log('is this a 404? this should bump up index and then run renderCal again');
+            }
+
+        });
+
+}
 
 
-    $('.signup-form').submit(function() {
-        event.preventDefault();
-        appUser.validatePassword();
-    });
+// sign up
+//
+
+//
+
+
+$('.signup-form').submit(function() {
+    event.preventDefault();
+    appUser.validatePassword();
+});
 
 
 
-    $('.submit-button').click(function() {
+$('.submit-button').click(function() {
 
-        newOrder.postOrder(weekArray);
-        console.log(weekArray);
+    newOrder.postOrder(weekArray);
+    console.log(weekArray);
 
-    });
+});
 
 
 

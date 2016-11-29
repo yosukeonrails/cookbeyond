@@ -1,6 +1,11 @@
 
+  var userNicknameData;
+
+
 
 export default class User {
+
+
 
     validatePassword() {
 
@@ -26,6 +31,7 @@ export default class User {
     logInUser() {
 
         var user = {
+
             username: $('#login-email-input').val(),
             password: $('#login-password-input').val(),
         };
@@ -37,9 +43,13 @@ export default class User {
             dataType: 'json',
             contentType: 'application/json',
 
-            success: function() {
+            success: function(data) {
               
-              window.location="/order.html";
+                window.location="/order.html";
+               console.log(data.userNickname);
+          userNicknameData = data.userNickname;
+
+
             },
             error: function(error) {
                   console.log('NOPE');
@@ -54,9 +64,9 @@ export default class User {
     createUser() {
 
         var user = {
+            userNickname:$('#nickname-input').val(),
             username: $('#email-input').val(),
             password: $('#password-input').val(),
-
         };
 
         var ajax = $.ajax('/users', {
@@ -91,3 +101,6 @@ export default class User {
     }
 
 }
+
+
+exports.userNicknameData= userNicknameData;

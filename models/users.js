@@ -2,6 +2,12 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcryptjs');
 
 var UserSchema = new mongoose.Schema({
+
+    userNickname:{
+      type:String,
+      required:true,
+      unique:true
+    },
     username: {
         type: String,
         required: true,
@@ -12,6 +18,8 @@ var UserSchema = new mongoose.Schema({
         type: String,
         required: true
     }
+
+
 });
 
 UserSchema.methods.validatePassword = function(password, callback) {

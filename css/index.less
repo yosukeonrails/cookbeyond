@@ -26,6 +26,20 @@
 @blue: #7599d1; //////// NEW CSS ///////
 ///'
 
+.user-navbar{
+
+  .user-name{
+
+        h1{
+          font-size:14px;
+          display: inline;
+        }
+
+  }
+
+}
+
+
 html {
     margin: 0;
     padding: 0;
@@ -163,6 +177,19 @@ html {
 // extra for order2.html - BEGIN
 //
 
+
+.week-starter{
+  width:500px;
+  .centralize;
+  font-family: @font1;
+  font-size: 16px;
+  select{
+    .centralize;
+    width: 100px;
+    background-color: #fdd09e;
+  }
+}
+
 .week-changer {
     height: 80px;
     width: 700px;
@@ -203,31 +230,6 @@ h1 {
 
 }
 
-//
-//
-// #next-week {
-//     height: 30px;
-//     width: 120px;
-//     float: right;
-//     margin-bottom: 10px;
-//     display: block;
-//     position: relative;
-//     border-radius: 4px;
-//       border:1px solid @light-black;
-//       background-color: #dbdbe0;
-// }
-//
-// #previous-week {
-//     float: left;
-//     height: 30px;
-//     width: 120px;
-//     margin-bottom: 10px;
-//     display: block;
-//     position: relative;
-//     border:1px solid @light-black;
-//     border-radius: 4px;
-//     background-color: #dbdbe0;
-// }
 
 .calendardiv {
     margin-bottom: 350px;
@@ -416,6 +418,7 @@ h1 {
     position: fixed;
     bottom: 10px;
     float: right;
+    opacity: 0.9;
 
     .search-div {
         float: left;
@@ -506,12 +509,12 @@ button {
 
 .sign-in {
     font-family: @font4;
-    font-size: 25px;
-    background-color: @white;
-    width: 600px;
+    font-size: 17px;
+    background-color: #d8d8da;
+    width: 500px;
     height: 550px;
     .centralize;
-    border: 3px solid @pink;
+    border: 3px solid @light-black;
     border-radius: 5px;
     color: @light-black;
     padding: 30px;
@@ -547,19 +550,21 @@ button {
         background-color: @pink;
         border: 0;
         border-radius: 5px;
-        font-family: @baloo;
+        font-family: @font1;
         font-size: 20px;
         color: white;
     }
 
     #giva-login-button {
-        background-color: @blue;
-        margin-top: 30px;
+        background-color: @green;
+       width: 300px;
+       font-size: 17px;
+
     }
 
     #guest-login-button {
-        background-color: @pink;
-        margin-top: 30px;
+        background-color: @light-black;
+
     }
 
     h2 {
@@ -582,7 +587,7 @@ button {
 .sign-up {
     .sign-in;
     height: 500px;
-
+   font-size: 17px;
     .form-container {
         .centralize;
         width: 400px;
@@ -600,10 +605,11 @@ button {
     h3 {
         //  width: 150px;
         display: inline;
-        font-size: 25px;
+           font-size: 17px;
     }
 
     #signup-button {
+
         #giva-login-button;
         background-color: @green;
     }

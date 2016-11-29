@@ -6756,6 +6756,10 @@ button.close {
 }
 /*# sourceMappingURL=bootstrap.css.map */
 
+.user-navbar .user-name h1 {
+  font-size: 14px;
+  display: inline;
+}
 html {
   margin: 0;
   padding: 0;
@@ -6866,6 +6870,19 @@ li {
 html {
   margin: 0;
   padding: 0;
+}
+.week-starter {
+  width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+  font-family: 'Rubik', sans-serif;
+  font-size: 16px;
+}
+.week-starter select {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100px;
+  background-color: #fdd09e;
 }
 .week-changer {
   height: 80px;
@@ -7064,6 +7081,7 @@ html {
   position: fixed;
   bottom: 10px;
   float: right;
+  opacity: 0.9;
 }
 .food-div .search-div {
   float: left;
@@ -7146,13 +7164,13 @@ button {
 }
 .sign-in {
   font-family: 'Work Sans', sans-serif;
-  font-size: 25px;
-  background-color: #f0f8f3;
-  width: 600px;
+  font-size: 17px;
+  background-color: #d8d8da;
+  width: 500px;
   height: 550px;
   margin-left: auto;
   margin-right: auto;
-  border: 3px solid #FF6D6D;
+  border: 3px solid #262626;
   border-radius: 5px;
   color: #262626;
   padding: 30px;
@@ -7187,17 +7205,17 @@ button {
   background-color: #FF6D6D;
   border: 0;
   border-radius: 5px;
-  font-family: 'Baloo Da', cursive;
+  font-family: 'Rubik', sans-serif;
   font-size: 20px;
   color: white;
 }
 .sign-in #giva-login-button {
-  background-color: #7599d1;
-  margin-top: 30px;
+  background-color: #4CAF50;
+  width: 300px;
+  font-size: 17px;
 }
 .sign-in #guest-login-button {
-  background-color: #FF6D6D;
-  margin-top: 30px;
+  background-color: #262626;
 }
 .sign-in h2 {
   font-size: 15px;
@@ -7212,18 +7230,18 @@ button {
 }
 .sign-up {
   font-family: 'Work Sans', sans-serif;
-  font-size: 25px;
-  background-color: #f0f8f3;
-  width: 600px;
+  background-color: #d8d8da;
+  width: 500px;
   height: 550px;
   margin-left: auto;
   margin-right: auto;
-  border: 3px solid #FF6D6D;
+  border: 3px solid #262626;
   border-radius: 5px;
   color: #262626;
   padding: 30px;
   margin-top: 50px;
   height: 500px;
+  font-size: 17px;
 }
 .sign-up label {
   text-align: center;
@@ -7254,17 +7272,17 @@ button {
   background-color: #FF6D6D;
   border: 0;
   border-radius: 5px;
-  font-family: 'Baloo Da', cursive;
+  font-family: 'Rubik', sans-serif;
   font-size: 20px;
   color: white;
 }
 .sign-up #giva-login-button {
-  background-color: #7599d1;
-  margin-top: 30px;
+  background-color: #4CAF50;
+  width: 300px;
+  font-size: 17px;
 }
 .sign-up #guest-login-button {
-  background-color: #FF6D6D;
-  margin-top: 30px;
+  background-color: #262626;
 }
 .sign-up h2 {
   font-size: 15px;
@@ -7293,11 +7311,11 @@ button {
 }
 .sign-up h3 {
   display: inline;
-  font-size: 25px;
+  font-size: 17px;
 }
 .sign-up #signup-button {
-  background-color: #7599d1;
-  margin-top: 30px;
+  width: 300px;
+  font-size: 17px;
   background-color: #4CAF50;
 }
 .sign-up #label-container {
