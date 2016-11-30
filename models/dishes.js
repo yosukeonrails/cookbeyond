@@ -6,6 +6,10 @@ var DishSchema = new mongoose.Schema({
     user: {
         type: String
     },
+    name:{
+      type:String,
+      unique:true
+    },
 
     date: {
         type:Date

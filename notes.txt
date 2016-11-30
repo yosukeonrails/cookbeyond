@@ -1,9 +1,9 @@
 
-
-// using postman //
-
+// deploying to Heroku beacuse it didnt work last time..
 // log in how to handle responded  //
-
+// how to take the response Json from another file and use it ? after user login
+// how to log in user right after sign up?
+//
 // ..User end point //
 
 

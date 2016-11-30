@@ -1,23 +1,12 @@
 var mongoose = require('mongoose');
-
+var config = require('./config');
 var events = require('events');
 var myEmitter = new events.EventEmitter();
-
-
-mongoose.Promise = global.Promise;
-mongoose.createConnection('mongodb://localhost/');
-
-mongoose.connection.on('error', function(err) {
-    console.error('Could not connect.  Error:', err);
-});
-
 var cookieParser = require('cookie-parser');
 var http = require('http');
 var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
-
-var config = require('./config');
 var bcrypt = require('bcryptjs');
 var app = express();
 var passport = require('passport');
@@ -26,7 +15,6 @@ var session = require("express-session");
 var server = http.Server(app);
 var socket_io = require('socket.io');
 var io = socket_io(server);
-
 var LocalStrategy = require('passport-local').Strategy;
 
 
@@ -46,13 +34,14 @@ var Order = require('./models/order.js');
 var Dish= require('./models/dishes.js');
 
 
+mongoose.Promise = global.Promise;
+
+
 io.on('connection', function(socket) {
 
     console.log('connected to socket');
 
 });
-
-
 
 
 passport.use(new LocalStrategy(
@@ -80,12 +69,12 @@ passport.use(new LocalStrategy(
 
 
 
-
-app.get('/dishes', function(req, res) {
-
-    res.json(dishesArray);
-
-});
+//
+// app.get('/dishes', function(req, res) {
+//
+//     res.json(dishesArray);
+//
+// });
 
 
 
@@ -438,7 +427,7 @@ app.delete('/order', function(req, res) {
 // post your own dishes//
 //
 
-app.post('/dishes', function(req, res) {
+app.post('/mydish', function(req, res) {
 
   Dish.create({
     name:req.body.name,
@@ -446,7 +435,7 @@ app.post('/dishes', function(req, res) {
     imageURL:req.body.imageURL,
     dishInfo:req.body.dishInfo,
     price:req.body.price,
-    data:req.body.date
+    date:req.body.date
   },
 function(err,dish){
   if(err){
@@ -460,12 +449,28 @@ function(err,dish){
 
 });
 
+//  search dishes and rendering dishes //
+
+
+app.get('/dishes', function(req,res){
+
+      Dish.find({},function(err,data){
+        if(err){
+          console.log(err);
+        }
+        console.log(data);
+
+        res.status(201).json(data);
+
+      });
+});
+
 
 app.get('/user', function(req,res){
 
     User.find({
       user:req.user._id,
-      
+
     }, function(err, data){
       if(err){
         return res.status(500).json({
@@ -478,12 +483,18 @@ app.get('/user', function(req,res){
     });
 });
 
+app.get('/logout', function(req, res){
+  req.logout();
+  res.redirect('/');
+});
+
 
 /// running the server; //
 ///
 ///
 
 var runServer = function(callback) {
+
     mongoose.connect(config.DATABASE_URL, function(err) {
         if (err && callback) {
             return callback(err);

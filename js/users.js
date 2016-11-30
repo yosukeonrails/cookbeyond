@@ -44,7 +44,7 @@ export default class User {
             contentType: 'application/json',
 
             success: function(data) {
-              
+
                 window.location="/order.html";
                console.log(data.userNickname);
           userNicknameData = data.userNickname;
@@ -77,7 +77,7 @@ export default class User {
             contentType: 'application/json',
 
             success: function() {
-
+                
                 console.log('user created!');
 
             },

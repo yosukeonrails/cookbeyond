@@ -75,6 +75,7 @@
 	var currentArray = [];
 	var $ = __webpack_require__(3);
 	var bootstrap = __webpack_require__(6);
+	var thisFullDay = new Date();
 	var thisYear = new Date().getFullYear();
 	var thisMonth = new Date().getMonth();
 	var thisDay = new Date().getDate();
@@ -94,52 +95,13 @@
 	var titleDate;
 	var titleSelector;
 	var mS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-	
 	var wS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-	
-	// 1 - 2 = 30 of OCtober
-	
-	
-	// when the user first sees the calendar,
-	// the person sees the week that day are in.
-	
-	
-	function deleteDishView(postedDish, orderId, currentDay) {
-	
-	    var appended = '<div class="insidediv"><img src=' + postedDish.dish.imageURL + '></img>' + '<p>' + postedDish.dish.name + '</p></div>';
-	    appended = $(appended);
-	
-	    var deleteX = '<i class="fa fa-times-circle-o"  aria-hidden="true"></i>';
-	
-	    deleteX = $(deleteX);
-	    console.log(deleteX);
-	
-	    deleteX.click(function () {
-	        console.log(data, appended, deleteX);
-	
-	        appended.remove();
-	        deleteX.remove();
-	
-	        var orderDishId = postedDish._id;
-	        var orderPrice = postedDish.dish.price;
-	
-	        console.log(orderId);
-	        console.log(orderPrice);
-	        console.log(orderDishId);
-	
-	        deleteDish(orderId, orderDishId, orderPrice);
-	    });
-	
-	    $('#' + currentDay + '').append(appended);
-	    $('#' + currentDay + '').append(deleteX);
-	}
 	
 	var STATE = {
 	
 	    userOrder: {},
 	    orderObject: {},
 	    thisDayObject: {}
-	
 	};
 	
 	var Order = function () {
@@ -170,11 +132,9 @@
 	                    STATE.userOrder[data._id] = data;
 	
 	                    var divId = data.dishes.length - 1;
-	                    console.log(divId);
+	
 	                    var postedDish = data.dishes[data.dishes.length - 1];
 	                    var orderId = data._id;
-	
-	                    console.log('here is the data back:');
 	
 	                    currentObjectId = STATE.userOrder[data._id]._id;
 	                    var currentDay = currentSelectedDay.dateId;
@@ -190,27 +150,6 @@
 	
 	    return Order;
 	}();
-	
-	function getCurrentDishes(dayObject, dayObjectId) {
-	
-	    var dateId = dayObjectId;
-	
-	    var ajax = $.ajax('/order/date/' + dateId, {
-	
-	        type: 'GET',
-	
-	        success: function success(data) {
-	
-	            renderDishes(dayObject, data);
-	            console.log('successs!');
-	        },
-	        error: function error(_error2) {
-	            console.log(_error2);
-	            console.log('is this a 404? this should bump up index and then run renderCal again');
-	        }
-	
-	    });
-	}
 	
 	function titleWeek(titleSelector, testingDate) {
 	
@@ -228,17 +167,12 @@
 	    }
 	
 	    $(titleSelector).text(wS[testingDate.getDay()] + ' , ' + mS[testingDate.getMonth()] + ' ' + titleDate + ',  ' + testingDate.getFullYear());
-	    console.log(wS[testingDate.getDay()]);
-	    console.log(mS[testingDate.getMonth()]);
-	    console.log(titleDate);
 	}
 	
 	function renderCalendar(index) {
 	
-	    console.log(index);
-	
 	    if (index == 1) {
-	        console.log('begggining');
+	
 	        titleSelector = $('.begin-week h1');
 	
 	        titleWeek(titleSelector, testingDate);
@@ -246,7 +180,7 @@
 	
 	    if (index == 7) {
 	        titleSelector = $('.end-week h1');
-	        console.log('end');
+	
 	        titleWeek(titleSelector, testingDate);
 	    }
 	
@@ -264,12 +198,90 @@
 	        };
 	
 	        renderDays(dayObject);
-	
 	        renderingWeekArray.push(dayObject);
-	    } else if (index == 7) {
-	
-	        console.log('end of loop now testingDate should be == -6');
 	    }
+	}
+	
+	function renderDays(dayObject) {
+	
+	    if (dayObject.day == thisDay) {
+	
+	        $('.calendardiv ul').append('<div class="render-food-list" style="color:#737373" id=' + dayObject.dateId + '>  <div class="datesdiv" style="color:#ffffcc" id=' + dayObject.dateId + '>' + wS[dayObject.weekday] + '</br>' + mS[dayObject.month] + '</br>' + dayObject.day + '</br></div></div> ');
+	    } else {
+	
+	        $('.calendardiv ul').append('<div class="render-food-list" id=' + dayObject.dateId + '> <div class="datesdiv "id=' + dayObject.dateId + '>' + wS[dayObject.weekday] + '</br>' + mS[dayObject.month] + '</br>' + dayObject.day + '</br></div></div>');
+	    }
+	
+	    if (dayObject.dateId == thisDayId) {
+	
+	        displaySelectedBorder(dayObject.dateId);
+	
+	        thisDayObject = dayObject;
+	    }
+	    getCurrentDishes(dayObject, dayObject.dateId);
+	}
+	
+	function getCurrentDishes(dayObject, dayObjectId) {
+	
+	    var dateId = dayObjectId;
+	
+	    var ajax = $.ajax('/order/date/' + dateId, {
+	
+	        type: 'GET',
+	
+	        success: function success(data) {
+	
+	            renderDishes(dayObject, data);
+	        },
+	        error: function error(_error2) {
+	            console.log(_error2);
+	        }
+	
+	    });
+	}
+	
+	function renderDishes(dayObject, orderObject) {
+	
+	    if (orderObject.length === 0) {
+	
+	        index++;
+	        renderCalendar(index);
+	    } else {
+	
+	        for (i = 0; i < orderObject[0].dishes.length; i++) {
+	
+	            var currentDay = dayObject.dateId;
+	
+	            deleteDishView(orderObject[0].dishes[i], orderObject[0]._id, currentDay);
+	        }
+	
+	        index++;
+	        renderCalendar(index);
+	    }
+	}
+	
+	function deleteDishView(postedDish, orderId, currentDay) {
+	
+	    var appended = '<div class="insidediv"><img src=' + postedDish.dish.imageURL + '></img>' + '<p>' + postedDish.dish.name + '</p></div>';
+	    appended = $(appended);
+	
+	    var deleteX = '<i class="fa fa-times-circle-o"  aria-hidden="true"></i>';
+	
+	    deleteX = $(deleteX);
+	
+	    deleteX.click(function () {
+	
+	        appended.remove();
+	        deleteX.remove();
+	
+	        var orderDishId = postedDish._id;
+	        var orderPrice = postedDish.dish.price;
+	
+	        deleteDish(orderId, orderDishId, orderPrice);
+	    });
+	
+	    $('#' + currentDay + '').append(appended);
+	    $('#' + currentDay + '').append(deleteX);
 	}
 	
 	function deleteDish(orderId, orderDishId, orderPrice) {
@@ -294,26 +306,6 @@
 	    });
 	}
 	
-	function renderDishes(dayObject, orderObject) {
-	
-	    if (orderObject.length === 0) {
-	
-	        index++;
-	        renderCalendar(index);
-	    } else {
-	
-	        for (i = 0; i < orderObject[0].dishes.length; i++) {
-	
-	            var currentDay = dayObject.dateId;
-	
-	            deleteDishView(orderObject[0].dishes[i], orderObject[0]._id, currentDay);
-	        }
-	
-	        index++;
-	        renderCalendar(index);
-	    }
-	}
-	
 	function displaySelectedBorder(dateId) {
 	
 	    $('.render-food-list').css("border", "1px solid #737373");
@@ -323,26 +315,6 @@
 	    $('#' + dateId + '').css("opacity", "1");
 	    $('#' + dateId + '').css("background-color", "#d8d8da");
 	    $('#' + dateId + '').css("border", "1px solid #ff7733");
-	}
-	
-	function renderDays(dayObject) {
-	
-	    if (dayObject.day == thisDay) {
-	
-	        $('.calendardiv ul').append('<div class="render-food-list" style="color:#737373" id=' + dayObject.dateId + '>  <div class="datesdiv" style="color:#ffffcc" id=' + dayObject.dateId + '>' + wS[dayObject.weekday] + '</br>' + mS[dayObject.month] + '</br>' + dayObject.day + '</br></div></div> ');
-	    } else {
-	
-	        $('.calendardiv ul').append('<div class="render-food-list" id=' + dayObject.dateId + '> <div class="datesdiv "id=' + dayObject.dateId + '>' + wS[dayObject.weekday] + '</br>' + mS[dayObject.month] + '</br>' + dayObject.day + '</br></div></div>');
-	    }
-	
-	    if (dayObject.dateId == thisDayId) {
-	
-	        displaySelectedBorder(dayObject.dateId);
-	
-	        thisDayObject = dayObject;
-	    }
-	
-	    getCurrentDishes(dayObject, dayObject.dateId);
 	}
 	
 	var View = function () {
@@ -367,8 +339,31 @@
 	    return View;
 	}();
 	
-	function displayFood(dishes) {
+	function getAllDishes() {
+	    var ajax = $.ajax('/dishes', {
+	        type: 'GET',
 	
+	        success: function success(data) {
+	            console.log(data);
+	            dishesArray = data;
+	            optionView(dishesArray);
+	        },
+	        error: function error(_error4) {
+	            console.log(_error4);
+	        }
+	    });
+	}
+	
+	function optionView(dishesArray) {
+	    console.log(dishesArray);
+	    for (i = 0; i < dishesArray.length; i++) {
+	        displayFood(dishesArray[i]);
+	        console.log(dishesArray[0]);
+	    }
+	}
+	
+	function displayFood(dishes) {
+	    console.log(dishes);
 	    $('.food-div').append("<div class='foodslot' id=" + dishes.dishId + "><div class='foodimage'  style='background-image:url(" + dishes.imageURL + "); background-size: 130px 120px'> </div> <label>" + dishes.name + "</label></div> ");
 	}
 	
@@ -395,12 +390,10 @@
 	
 	    getUser();
 	
-	    console.log('testing the week starter 4');
+	    console.log('is it logging 2?');
 	
 	    for (i = 0; i < wS.length; i++) {
-	
 	        var newI = -(i - thisWeekDay);
-	        // if 0
 	        $('.week-starter-select').append('<option id=' + newI + '>' + wS[i] + '</option>');
 	    }
 	
@@ -416,18 +409,20 @@
 	            //-1          //29           // 0
 	        });
 	        // here we change the testingWeekday
-	
 	    });
 	
-	    console.log('testing date title 1');
+	    // render calendar
 	
 	    loadCalendar(index, weekChanger, testingDate, testingWeekday);
 	
-	    $.get('/dishes', function (data) {
-	        //  data is the json data responded //
-	        dishesArray = data;
-	        optionView();
-	    });
+	    // $.get('/dishes', (data) => { //  data is the json data responded //
+	    //     dishesArray = data;
+	    //     optionView();
+	    // });
+	
+	    getAllDishes();
+	
+	    // move calendar by 1 week //
 	
 	    $('#next-week, .fa.fa-arrow-circle-o-right').click(function () {
 	
@@ -435,7 +430,7 @@
 	
 	        weekChanger = weekChanger + 7;
 	        index = 0;
-	        console.log(weekChanger);
+	
 	        loadCalendar(index, weekChanger, testingDate, testingWeekday);
 	    });
 	
@@ -445,21 +440,16 @@
 	        weekChanger = weekChanger - 7;
 	        index = 0;
 	
-	        console.log(weekChanger);
-	
 	        loadCalendar(index, weekChanger, testingDate, testingWeekday);
 	    });
 	
-	    $('.calendardiv').on('click', '.render-food-list', function () {
+	    // select the day you want the dish to go to//
 	
-	        console.log(renderingWeekArray);
-	        console.log(this.id);
+	    $('.calendardiv').on('click', '.render-food-list', function () {
 	
 	        for (i = 0; i < renderingWeekArray.length; i++) {
 	            if (this.id == renderingWeekArray[i].dateId) {
 	                currentSelectedDay = renderingWeekArray[i];
-	
-	                console.log(currentSelectedDay);
 	            }
 	        }
 	
@@ -468,16 +458,13 @@
 	
 	    //ADD DISHES BY CLIKCING //
 	
-	
 	    $('.food-div').on('click', '.foodslot', function () {
-	        console.log(thisDayObject);
+	
 	        var i = 0;
 	
 	        var selectedDish = $(this)[0].id;
 	
 	        var dish = newView.clickDish(i, selectedDish);
-	
-	        console.log(dish);
 	
 	        if (currentSelectedDay === undefined) {
 	
@@ -487,25 +474,19 @@
 	        }
 	    });
 	
-	    function optionView() {
+	    // render the list of food
 	
-	        for (i = 0; i < dishesArray.length; i++) {
-	            displayFood(dishesArray[i]);
-	        }
-	    }
 	
 	    //log in
 	
-	
 	    $('#giva-login-button').click(function () {
 	        event.preventDefault();
-	        console.log('clicked');
+	
 	        appUser.logInUser();
 	    });
 	
 	    $('#login-button').click(function () {
 	
-	        console.log('clicked');
 	        window.location.href = "/home.html";
 	    });
 	
@@ -515,23 +496,15 @@
 	
 	            type: 'GET',
 	
-	            success: function success(data) {
-	
-	                console.log(data);
-	            },
-	            error: function error(_error4) {
-	                console.log(_error4);
-	                console.log('is this a 404? this should bump up index and then run renderCal again');
+	            success: function success(data) {},
+	            error: function error(_error5) {
+	                console.log(_error5);
 	            }
 	
 	        });
 	    }
 	
 	    // sign up
-	    //
-	
-	    //
-	
 	
 	    $('.signup-form').submit(function () {
 	        event.preventDefault();
@@ -541,9 +514,93 @@
 	    $('.submit-button').click(function () {
 	
 	        newOrder.postOrder(weekArray);
-	        console.log(weekArray);
 	    });
-	});
+	
+	    // log out
+	
+	    $('.logout-navbar,.fa.fa-sign-out').click(function () {
+	
+	        var ajax = $.ajax('/logout', {
+	
+	            type: 'GET',
+	
+	            success: function success(data) {
+	
+	                window.location = '/login.html';
+	            },
+	            error: function error(_error6) {
+	                console.log(_error6);
+	            }
+	
+	        });
+	    });
+	
+	    /// mydish.html
+	
+	    var myDishSpicy;
+	
+	    for (i = 1; i < 5; i++) {
+	
+	        $('.mydish-spicy').append('<option id=' + i + '>' + i + '</option>');
+	    }
+	
+	    $('.mydish-spicy').change(function () {
+	
+	        myDishSpicy = $('.mydish-form option:selected').val();
+	
+	        console.log('testing');
+	        console.log(myDishSpicy);
+	    });
+	
+	    $('.mydish-form').submit(function () {
+	
+	        event.preventDefault();
+	
+	        console.log('SUbmitted');
+	
+	        console.log(myDishSpicy);
+	
+	        var myDishName = $('.mydish-name').val();
+	        var myDishId = $('.mydish-dishId').val();
+	        var myDishImageURL = $('.mydish-imageURL').val();
+	        var myDishPrice = $('.mydish-price').val();
+	        var myDishCountry = $('.mydish-country').val();
+	
+	        console.log(myDishImageURL);
+	
+	        var myDishInfo = {
+	            country: myDishCountry,
+	            spicy: myDishSpicy
+	        };
+	
+	        var myDishData = {
+	            name: myDishName,
+	            dishId: myDishId,
+	            imageURL: myDishImageURL,
+	            dishInfo: myDishInfo,
+	            price: myDishPrice,
+	            date: thisFullDay
+	        };
+	
+	        var ajax = $.ajax('/mydish', {
+	
+	            type: 'POST',
+	            data: JSON.stringify(myDishData),
+	            dataType: 'json',
+	            contentType: 'application/json',
+	
+	            success: function success(data) {
+	
+	                console.log('dish was created');
+	            },
+	
+	            error: function error(_error7) {
+	                console.log(_error7);
+	            }
+	
+	        });
+	    });
+	}); // end of document ready//
 
 /***/ },
 /* 1 */
