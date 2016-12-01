@@ -569,9 +569,9 @@
 	        console.log('SUbmitted');
 	
 	        console.log(myDishSpicy);
-	
+	        var randomNumber = Math.floor(Math.random() * 10000 + 1);
 	        var myDishName = $('.mydish-name').val();
-	        var myDishId = $('.mydish-dishId').val();
+	        var myDishId = myDishName.replace(/\s+/g, '-').toLowerCase() + "-" + randomNumber;
 	        var myDishImageURL = $('.mydish-imageURL').val();
 	        var myDishPrice = $('.mydish-price').val();
 	        var myDishCountry = $('.mydish-country').val();
@@ -604,6 +604,7 @@
 	            success: function success(data) {
 	                window.location = "/dashboard.html";
 	                console.log('dish was created');
+	                console.log(data.dishId);
 	            },
 	
 	            error: function error(_error7) {
