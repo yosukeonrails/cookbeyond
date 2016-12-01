@@ -365,7 +365,7 @@ $(document).ready(function() {
 
     getUser();
 
-     
+
 
     $.get('/myuser', function(data){
 
@@ -624,7 +624,7 @@ $(document).ready(function() {
             contentType: 'application/json',
 
             success: function(data) {
-
+                window.location="/dashboard.html";
                 console.log('dish was created');
             },
 

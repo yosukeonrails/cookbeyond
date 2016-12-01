@@ -602,7 +602,7 @@
 	            contentType: 'application/json',
 	
 	            success: function success(data) {
-	
+	                window.location = "/dashboard.html";
 	                console.log('dish was created');
 	            },
 	
