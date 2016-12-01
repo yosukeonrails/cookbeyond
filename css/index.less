@@ -25,6 +25,15 @@
 @font9: 'Nunito', sans-serif;
 @blue: #7599d1; //////// NEW CSS ///////
 ///'
+///
+
+a{
+  color:@white;
+}
+a:link {
+    text-decoration: none;
+}
+
 
 .user-navbar{
 
@@ -103,14 +112,61 @@ body {
     }
 }
 
-.main {
-    h1 {
-        font-size: 20px;
-        color: @light-black;
-        font-family: @font3;
-        text-align: center;
+.dashboard-main {
+
+  .options{
+
+    margin-top: 30px;
+    width: 400px;
+   .centralize;
+
+
+    li{
+      margin-bottom: 20px;
+      display: block;
+
+      .centralize;
+      border:1px solid @light-black;
+      width:300px;
+      background-color: @light-black;
+      padding: 10px;
+      border-radius:4px;
+
     }
+
+    a{
+      font-size: 20px;
+      color: @white;
+      font-family: @font3;
+      text-align: center;
+    }
+
+
+  }
+  .dashboard-greeting {
+
+       margin-top: 30px;
+       width: 500px;
+      .centralize;
+
+      h1 {
+          font-size: 20px;
+          color: @light-black;
+          font-family: @font3;
+          text-align: center;
+          display: inline;
+
+      }
+
+      .user-name h1{
+
+
+         font-weight: 900;
+         color:@pink;
+      }
+  }
 }
+
 ////////
 
 .header {
@@ -647,8 +703,12 @@ button {
   border: 3px solid @light-black;
   border-radius: 5px;
   color: @light-black;
-  padding: 30px;
+  padding: 5px;
   margin-top: 50px;
+
+  .mydish{
+   margin-left: 20px;
+  }
 
   button {
     width: 200px;
@@ -656,9 +716,15 @@ button {
     background-color: @green;
     display: block;
     .centralize;
-    margin-top: 50px;
+    margin-top: 10px;
     border-radius: 4px;
     color:white;
+  }
+
+
+  input {
+    display: block;
+    border-radius: 4px;
   }
 
 }

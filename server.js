@@ -466,6 +466,14 @@ app.get('/dishes', function(req,res){
 });
 
 
+
+app.get('/myuser', function(req, res){
+
+    res.json(req.user);
+
+});
+
+
 app.get('/user', function(req,res){
 
     User.find({
@@ -502,7 +510,6 @@ var runServer = function(callback) {
 
         server.listen(config.PORT, function() {
             console.log('Listening on localhost:' + config.PORT);
-
 
             if (callback) {
                 callback();

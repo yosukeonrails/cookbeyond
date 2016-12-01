@@ -153,17 +153,14 @@
 	
 	function titleWeek(titleSelector, testingDate) {
 	
-	    if (testingDate.getDate() > 3) {
-	        titleDate = testingDate.getDate() + 'th';
-	    }
-	    if (testingDate.getDate() == 1) {
+	    if (testingDate.getDate() == 1 || testingDate.getDate() - 20 == 1 || testingDate.getDate() - 30 == 1) {
 	        titleDate = testingDate.getDate() + 'st';
-	    }
-	    if (testingDate.getDate() == 2) {
+	    } else if (testingDate.getDate() == 2 || testingDate.getDate() - 20 == 2 || testingDate.getDate() - 30 == 2) {
 	        titleDate = testingDate.getDate() + 'nd';
-	    }
-	    if (testingDate.getDate() == 3) {
+	    } else if (testingDate.getDate() == 3 || testingDate.getDate() - 20 == 3 || testingDate.getDate() - 30 == 3) {
 	        titleDate = testingDate.getDate() + 'rd';
+	    } else {
+	        titleDate = testingDate.getDate() + 'th';
 	    }
 	
 	    $(titleSelector).text(wS[testingDate.getDay()] + ' , ' + mS[testingDate.getMonth()] + ' ' + titleDate + ',  ' + testingDate.getFullYear());
@@ -390,6 +387,12 @@
 	
 	    getUser();
 	
+	    $.get('/myuser', function (data) {
+	
+	        console.log(data.userNickname);
+	        $('.user-name h1').text(data.userNickname);
+	    });
+	
 	    console.log('is it logging 2?');
 	
 	    for (i = 0; i < wS.length; i++) {
@@ -482,7 +485,14 @@
 	    $('#giva-login-button').click(function () {
 	        event.preventDefault();
 	
-	        appUser.logInUser();
+	        var logInData = {
+	
+	            username: $('#login-email-input').val(),
+	            password: $('#login-password-input').val()
+	
+	        };
+	
+	        appUser.logInUser(logInData);
 	    });
 	
 	    $('#login-button').click(function () {
@@ -574,12 +584,14 @@
 	        };
 	
 	        var myDishData = {
+	
 	            name: myDishName,
 	            dishId: myDishId,
 	            imageURL: myDishImageURL,
 	            dishInfo: myDishInfo,
 	            price: myDishPrice,
 	            date: thisFullDay
+	
 	        };
 	
 	        var ajax = $.ajax('/mydish', {
@@ -616,8 +628,6 @@
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 	
-	var userNicknameData;
-	
 	var User = function () {
 	    function User() {
 	        _classCallCheck(this, User);
@@ -636,21 +646,22 @@
 	            if (user.password !== user.password2) {
 	                alert('password did not match!');
 	            }
-	
-	            this.createUser();
+	            console.log(user);
+	            this.createUser(user);
 	        }
 	    }, {
 	        key: 'getUser',
 	        value: function getUser() {}
 	    }, {
 	        key: 'logInUser',
-	        value: function logInUser() {
+	        value: function logInUser(logInData) {
 	
 	            var user = {
-	
-	                username: $('#login-email-input').val(),
-	                password: $('#login-password-input').val()
+	                username: logInData.username,
+	                password: logInData.password
 	            };
+	
+	            console.log(logInData);
 	
 	            var ajax = $.ajax('/login', {
 	
@@ -661,9 +672,7 @@
 	
 	                success: function success(data) {
 	
-	                    window.location = "/order.html";
-	                    console.log(data.userNickname);
-	                    userNicknameData = data.userNickname;
+	                    window.location = "/dashboard.html";
 	                },
 	                error: function error(_error) {
 	                    console.log('NOPE');
@@ -673,24 +682,30 @@
 	        }
 	    }, {
 	        key: 'createUser',
-	        value: function createUser() {
+	        value: function createUser(user) {
 	
-	            var user = {
+	            var createdUser = {
 	                userNickname: $('#nickname-input').val(),
-	                username: $('#email-input').val(),
-	                password: $('#password-input').val()
+	                username: user.username,
+	                password: user.password
 	            };
 	
 	            var ajax = $.ajax('/users', {
 	
 	                type: 'POST',
-	                data: JSON.stringify(user),
+	                data: JSON.stringify(createdUser),
 	                dataType: 'json',
 	                contentType: 'application/json',
 	
-	                success: function success() {
+	                success: function success(data) {
+	                    var appUser = new User();
 	
-	                    console.log('user created!');
+	                    var logInData = {
+	                        username: user.username,
+	                        password: user.password
+	                    };
+	
+	                    appUser.logInUser(logInData);
 	                },
 	                error: function error(_error2) {
 	
@@ -714,9 +729,6 @@
 	}();
 	
 	exports.default = User;
-	
-	
-	exports.userNicknameData = userNicknameData;
 
 /***/ },
 /* 2 */

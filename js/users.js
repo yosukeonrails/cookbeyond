@@ -1,10 +1,6 @@
 
-  var userNicknameData;
-
-
 
 export default class User {
-
 
 
     validatePassword() {
@@ -18,23 +14,22 @@ export default class User {
         if (user.password !== user.password2) {
             alert('password did not match!');
         }
-
-        this.createUser();
-
+          console.log(user);
+        this.createUser(user);
     }
 
     getUser() {
 
     }
 
-
-    logInUser() {
+    logInUser(logInData) {
 
         var user = {
-
-            username: $('#login-email-input').val(),
-            password: $('#login-password-input').val(),
+            username: logInData.username,
+            password: logInData.password
         };
+
+        console.log(logInData);
 
         var ajax = $.ajax('/login', {
 
@@ -45,10 +40,7 @@ export default class User {
 
             success: function(data) {
 
-                window.location="/order.html";
-               console.log(data.userNickname);
-          userNicknameData = data.userNickname;
-
+                window.location="/dashboard.html";       
 
             },
             error: function(error) {
@@ -57,28 +49,33 @@ export default class User {
 
         });
 
-
     }
 
 
-    createUser() {
+    createUser(user) {
 
-        var user = {
+        var createdUser = {
             userNickname:$('#nickname-input').val(),
-            username: $('#email-input').val(),
-            password: $('#password-input').val(),
+            username: user.username,
+            password: user.password
         };
 
         var ajax = $.ajax('/users', {
 
             type: 'POST',
-            data: JSON.stringify(user),
+            data: JSON.stringify(createdUser),
             dataType: 'json',
             contentType: 'application/json',
 
-            success: function() {
-                
-                console.log('user created!');
+            success: function(data) {
+            var appUser = new User();
+
+            var logInData= {
+                username:user.username,
+                password:user.password
+              }  ;
+
+                appUser.logInUser(logInData);
 
             },
             error: function(error) {
@@ -101,6 +98,3 @@ export default class User {
     }
 
 }
-
-
-exports.userNicknameData= userNicknameData;

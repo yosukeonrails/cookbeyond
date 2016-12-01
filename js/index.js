@@ -92,17 +92,16 @@ class Order {
 
 function titleWeek(titleSelector, testingDate) {
 
-    if (testingDate.getDate() > 3) {
-        titleDate = testingDate.getDate() + 'th';
-    }
-    if (testingDate.getDate() == 1) {
+    if (testingDate.getDate() == 1 || testingDate.getDate()-20==1|| testingDate.getDate()-30==1) {
         titleDate = testingDate.getDate() + 'st';
     }
-    if (testingDate.getDate() == 2) {
+     else if (testingDate.getDate() == 2|| testingDate.getDate()-20==2|| testingDate.getDate()-30==2) {
         titleDate = testingDate.getDate() + 'nd';
-    }
-    if (testingDate.getDate() == 3) {
+    } else if (testingDate.getDate() == 3|| testingDate.getDate()-20==3|| testingDate.getDate()-30==3) {
         titleDate = testingDate.getDate() + 'rd';
+    }else
+    {
+        titleDate = testingDate.getDate() + 'th';
     }
 
     $(titleSelector).text(wS[testingDate.getDay()] + ' , ' + mS[testingDate.getMonth()] + ' ' + titleDate + ',  ' + testingDate.getFullYear());
@@ -366,6 +365,15 @@ $(document).ready(function() {
 
     getUser();
 
+     
+
+    $.get('/myuser', function(data){
+
+      console.log(data.userNickname);
+       $('.user-name h1').text(data.userNickname);
+
+    });
+
     console.log('is it logging 2?');
 
 
@@ -475,7 +483,14 @@ $(document).ready(function() {
     $('#giva-login-button').click(function() {
         event.preventDefault();
 
-        appUser.logInUser();
+      var logInData= {
+
+        username: $('#login-email-input').val(),
+        password: $('#login-password-input').val()
+
+      };
+
+        appUser.logInUser(logInData);
 
     });
 
@@ -573,7 +588,7 @@ $(document).ready(function() {
         event.preventDefault();
 
         console.log('SUbmitted');
-        
+
         console.log(myDishSpicy);
 
         var myDishName = $('.mydish-name').val();
@@ -590,13 +605,16 @@ $(document).ready(function() {
         };
 
         var myDishData = {
+
             name: myDishName,
             dishId: myDishId,
             imageURL:myDishImageURL,
             dishInfo:myDishInfo,
             price: myDishPrice,
             date: thisFullDay
+
         };
+
 
         var ajax = $.ajax('/mydish', {
 

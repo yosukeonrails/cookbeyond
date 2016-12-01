@@ -6756,6 +6756,12 @@ button.close {
 }
 /*# sourceMappingURL=bootstrap.css.map */
 
+a {
+  color: #f0f8f3;
+}
+a:link {
+  text-decoration: none;
+}
 .user-navbar .user-name h1 {
   font-size: 14px;
   display: inline;
@@ -6814,11 +6820,45 @@ body {
   color: #262626;
   font-size: 17px;
 }
-.main h1 {
+.dashboard-main .options {
+  margin-top: 30px;
+  width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.dashboard-main .options li {
+  margin-bottom: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid #262626;
+  width: 300px;
+  background-color: #262626;
+  padding: 10px;
+  border-radius: 4px;
+}
+.dashboard-main .options a {
+  font-size: 20px;
+  color: #f0f8f3;
+  font-family: 'Raleway', sans-serif;
+  text-align: center;
+}
+.dashboard-main .dashboard-greeting {
+  margin-top: 30px;
+  width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.dashboard-main .dashboard-greeting h1 {
   font-size: 20px;
   color: #262626;
   font-family: 'Raleway', sans-serif;
   text-align: center;
+  display: inline;
+}
+.dashboard-main .dashboard-greeting .user-name h1 {
+  font-weight: 900;
+  color: #FF6D6D;
 }
 .header {
   height: 70px;
@@ -7345,8 +7385,11 @@ button {
   border: 3px solid #262626;
   border-radius: 5px;
   color: #262626;
-  padding: 30px;
+  padding: 5px;
   margin-top: 50px;
+}
+.mydish-form .mydish {
+  margin-left: 20px;
 }
 .mydish-form button {
   width: 200px;
@@ -7355,8 +7398,12 @@ button {
   display: block;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 50px;
+  margin-top: 10px;
   border-radius: 4px;
   color: white;
+}
+.mydish-form input {
+  display: block;
+  border-radius: 4px;
 }
 /*# sourceMappingURL=cookbeyond.1.0.0.css.map */
